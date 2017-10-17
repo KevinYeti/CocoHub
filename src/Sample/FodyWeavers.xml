@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Weavers VerifyAssembly="true">
+  <Tracer adapterAssembly="Tracer.Cocohub" logManager="Tracer.Cocohub.Adapters.LogManagerAdapter" logger="Tracer.Cocohub.Adapters.LoggerAdapter" staticLogger="Tracer.Cocohub.Log">
+    <TraceOn class="private" method="private" />
+  </Tracer>
+</Weavers>
