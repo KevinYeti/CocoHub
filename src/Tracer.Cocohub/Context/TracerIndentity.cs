@@ -11,7 +11,7 @@ namespace Tracer.Cocohub.Context
             var tracer = new TracerIndentity();
             tracer._tracerId = Guid.NewGuid().ToString("N");
             tracer._spanId = "0";
-
+            TracerIndentity._tracer = tracer;
 
             return tracer;
         }
@@ -25,9 +25,13 @@ namespace Tracer.Cocohub.Context
             else
                 tracer._tracerId = Guid.NewGuid().ToString("N");
             tracer._spanId = "0";
+            TracerIndentity._tracer = tracer;
 
             return tracer;
         }
+
+        private static TracerIndentity _tracer = null;
+        public static TracerIndentity Current { get { return _tracer; } }
 
         private TracerIndentity() { }
 

@@ -32,6 +32,13 @@ namespace Tracer.Cocohub.Middleware
                 }
             }
 
+            //add tracerId to response header when return
+            if (!context.Response.Headers.ContainsKey(TracerContext._tracer) 
+                && TracerIndentity.Current != null)
+            {
+                context.Response.Headers.Add(TracerContext._tracer, TracerIndentity.Current.TracerId);
+            }
+
             // Call the next delegate/middleware in the pipeline
             return this._next(context);
         }

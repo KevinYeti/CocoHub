@@ -4,7 +4,7 @@ namespace Tracer.Cocohub.Context
 {
     public static class TracerContext
     {
-        internal static string _tracer = "_tracer";
+        internal static string _tracer = "CocohubTracer";
 
         private static IHttpContextAccessor _contextAccessor;
 
