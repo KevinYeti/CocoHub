@@ -24,7 +24,7 @@ namespace Tracer.Cocohub.Middleware
                 if (context.Request.Headers.Keys.Contains(TracerContext._tracer))
                 {
                     var tracer = context.Request.Headers[TracerContext._tracer].ToString();
-                    context.Items.Add(TracerContext._tracer, TracerIndentity.Create(tracer));
+                    context.Items.Add(TracerContext._tracer, TracerIndentity.FromString(tracer));
                 }
                 else
                 {
@@ -36,7 +36,7 @@ namespace Tracer.Cocohub.Middleware
             if (!context.Response.Headers.ContainsKey(TracerContext._tracer) 
                 && TracerIndentity.Current != null)
             {
-                context.Response.Headers.Add(TracerContext._tracer, TracerIndentity.Current.TracerId);
+                context.Response.Headers.Add(TracerContext._tracer, TracerIndentity.Current.ToString());
             }
 
             // Call the next delegate/middleware in the pipeline

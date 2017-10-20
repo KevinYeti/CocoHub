@@ -49,7 +49,7 @@ namespace Tracer.Cocohub.Context
                 //when _tracer is in header but not in context 
                 if (http.Request.Headers.Keys.Contains(_tracer))
                 {
-                    http.Items.Add(_tracer, TracerIndentity.Create(http.Request.Headers[_tracer].ToString()));
+                    http.Items.Add(_tracer, TracerIndentity.FromString(http.Request.Headers[_tracer].ToString()));
                 }
                 else
                 {

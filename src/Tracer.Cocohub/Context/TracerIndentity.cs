@@ -30,10 +30,45 @@ namespace Tracer.Cocohub.Context
             return tracer;
         }
 
+        private static TracerIndentity Create(string tracerId, string spanId)
+        {
+            var tracer = new TracerIndentity();
+            Guid _tracerId;
+            if (Guid.TryParse(tracerId, out _tracerId))
+                tracer._tracerId = _tracerId.ToString("N");
+            else
+                tracer._tracerId = Guid.NewGuid().ToString("N");
+            tracer._spanId = spanId;
+            TracerIndentity._tracer = tracer;
+
+            return tracer;
+        }
+
+        private static string[] _spliter = new string[] { ":" };
+
+        public static TracerIndentity FromString(string s)
+        {
+            if (s.Contains(":"))
+            {
+                var splits = s.Split(_spliter, StringSplitOptions.RemoveEmptyEntries );
+                return TracerIndentity.Create(splits[0], splits[1]);
+            }
+            else
+                return null;
+        }
+
         private static TracerIndentity _tracer = null;
         public static TracerIndentity Current { get { return _tracer; } }
 
         private TracerIndentity() { }
+
+        public override string ToString()
+        {
+            string s = string.Empty;
+            s = string.Format("{0}:{1}", _tracerId, _spanId);
+
+            return s;
+        }
 
         public void Enter()
         {
