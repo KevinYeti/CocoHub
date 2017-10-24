@@ -10,10 +10,10 @@ namespace Tracer.Cocohub.Adapters
     {
         private const string NullString = "<NULL>";
         private readonly Type _type;
-        private static string _textEnter = "ServerTime:[{2}]-{{\"Action\":\"Enter\",\"Method\":\"{0}\",\"Params\":\"{1}\"}}";
-        private static string _textReturn = "ServerTime:[{3}]-{{\"Action\":\"Return\",\"Method\":\"{0}\",\"Result\":\"{1}\",\"Time\":{2}}}";
-        private static string _textEnterWithTracer = "ServerTime:[{4}]-{{\"Action\":\"Enter\",\"Method\":\"{0}\",\"Params\":\"{1}\",\"TracerId\":\"{2}\",\"SpanId\":\"{3}\"}}";
-        private static string _textReturnWithTracer = "ServerTime:[{5}]-{{\"Action\":\"Return\",\"Method\":\"{0}\",\"Result\":\"{1}\",\"Time\":{2},\"TracerId\":\"{3}\",\"SpanId\":\"{4}\"}}";
+        private static string _textEnter = "[{2}]-{{\"Action\":\"Enter\",\"Method\":\"{0}\",\"Params\":\"{1}\"}}";
+        private static string _textReturn = "[{3}]-{{\"Action\":\"Return\",\"Method\":\"{0}\",\"Result\":\"{1}\",\"Time\":{2}}}";
+        private static string _textEnterWithTracer = "[{4}]-{{\"Action\":\"Enter\",\"Method\":\"{0}\",\"Params\":\"{1}\",\"TracerId\":\"{2}\",\"SpanId\":\"{3}\"}}";
+        private static string _textReturnWithTracer = "[{5}]-{{\"Action\":\"Return\",\"Method\":\"{0}\",\"Result\":\"{1}\",\"Time\":{2},\"TracerId\":\"{3}\",\"SpanId\":\"{4}\"}}";
         private static string _timeFormat = "yyyy-MM-dd HH:mm:ss.fff";
 
         public LoggerAdapter(Type type)
