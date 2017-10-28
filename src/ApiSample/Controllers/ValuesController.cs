@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Remote.Cocohub.Http;
 
 namespace ApiSample.Controllers
 {
@@ -13,9 +14,23 @@ namespace ApiSample.Controllers
         [HttpGet]
         public IEnumerable<string> Get()
         {
+            string[] result = new string[2];
+            result[0] = "111";
+            result[1] = "222";
+
             Foo(123, null);
+
+            RequestAgent.Get(new Uri("http://localhost:5000/api/values/1"), (code, content) => {
+                if (code == System.Net.HttpStatusCode.OK)
+                {
+                    result[1] = "333";
+                }
+
+            });
+
+
             Bar(123, new Uri("http://www.lifevc.com"));
-            return new string[] { "value1", "value2" };
+            return result;
         }
 
         private bool Foo(int num, Uri uri)

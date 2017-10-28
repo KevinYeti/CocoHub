@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <Folder Include="Http\" />
+    <Folder Include="Threading\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Tracer.Cocohub\Tracer.Cocohub.csproj" />

@@ -19,6 +19,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Tracer.Cocohub\Tracer.Cocohub.csproj" />
+    <ProjectReference Include="..\Remote.Cocohub\Remote.Cocohub.csproj" />
   </ItemGroup>
 
 </Project>
