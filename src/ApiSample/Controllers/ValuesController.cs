@@ -20,7 +20,7 @@ namespace ApiSample.Controllers
 
             Foo(123, null);
 
-            RequestAgent.Get(new Uri("http://localhost:5000/api/values/1"), (code, content) => {
+            RequestAgent.Get(new Uri("http://localhost:13926/api/values/1"), (code, content) => {
                 if (code == System.Net.HttpStatusCode.OK)
                 {
                     result[1] = "333";
@@ -29,7 +29,7 @@ namespace ApiSample.Controllers
             });
 
 
-            Bar(123, new Uri("http://www.lifevc.com"));
+            Bar(123, new Uri("http://www.lifepre.com"));
             return result;
         }
 
