@@ -1,0 +1,15 @@
+  /* 首页搜索图标样式覆盖-变为白色 */
+  .searchbox-v1 span {
+      color: #fff;
+  }
+
+  /* 首页搜索输入框样式覆盖 */
+  .searchbox-index {
+    padding-top: 200px;
+  }
+
+    /* 首页搜索按钮样式覆盖 */
+  .btn-index {
+      height: 40px;
+      padding: 6px 30px;
+    }
