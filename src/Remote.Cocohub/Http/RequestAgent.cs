@@ -19,8 +19,9 @@ namespace Remote.Cocohub.Http
                 using (var http = new HttpClient(handler))
                 {
                     if (TracerContext.Tracer != null)
+                    {
                         http.DefaultRequestHeaders.Add("Cocohub-Tracer", TracerContext.Tracer.ToString());
-
+                    }
 
                     //等待回应
                     var response = http.GetAsync(uri).Result;

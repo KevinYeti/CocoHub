@@ -44,7 +44,7 @@ namespace Tracer.Cocohub.Adapters
             else
                 message = String.Format(_textEnterWithTracer, methodInfo, argInfo, TracerContext.Tracer.TracerId, TracerContext.Tracer.SpanId, DateTime.Now.ToString(_timeFormat));
 
-            Console.WriteLine(message);
+            Log.Info(message);
         }
 
         public void TraceLeave(string methodInfo, long startTicks, long endTicks, string[] paramNames,
@@ -70,8 +70,8 @@ namespace Tracer.Cocohub.Adapters
                 message = String.Format(_textReturn, methodInfo, returnValue, timeTaken, DateTime.Now.ToString(_timeFormat));
             else
                 message = String.Format(_textReturnWithTracer, methodInfo, returnValue, timeTaken, TracerContext.Tracer.TracerId, TracerContext.Tracer.SpanId, DateTime.Now.ToString(_timeFormat));
-           
-            Console.WriteLine(message);
+
+            Log.Info(message);
             TracerContext.Leave();
         }
 

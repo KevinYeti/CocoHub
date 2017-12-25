@@ -1,15 +1,17 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26730.16
+VisualStudioVersion = 15.0.27130.2010
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sample", "Sample\Sample.csproj", "{67DADEAB-C83D-48C4-AD08-1602F6DBFE01}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample", "Sample\Sample.csproj", "{67DADEAB-C83D-48C4-AD08-1602F6DBFE01}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tracer.Cocohub", "Tracer.Cocohub\Tracer.Cocohub.csproj", "{E321E7D7-02AA-4700-8370-02A462C48EEC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tracer.Cocohub", "Tracer.Cocohub\Tracer.Cocohub.csproj", "{E321E7D7-02AA-4700-8370-02A462C48EEC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiSample", "ApiSample\ApiSample.csproj", "{1D31A965-76D9-4115-B7ED-8FF5CCF7C563}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApiSample", "ApiSample\ApiSample.csproj", "{1D31A965-76D9-4115-B7ED-8FF5CCF7C563}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Remote.Cocohub", "Remote.Cocohub\Remote.Cocohub.csproj", "{801C2E96-0FA1-483D-9622-B75D79891D54}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Remote.Cocohub", "Remote.Cocohub\Remote.Cocohub.csproj", "{801C2E96-0FA1-483D-9622-B75D79891D54}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logger.Cocohub", "Logger.Cocohub\Logger.Cocohub.csproj", "{95E188F9-31F3-4CD5-8D0E-1D00E613A219}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{801C2E96-0FA1-483D-9622-B75D79891D54}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{801C2E96-0FA1-483D-9622-B75D79891D54}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{801C2E96-0FA1-483D-9622-B75D79891D54}.Release|Any CPU.Build.0 = Release|Any CPU
+		{95E188F9-31F3-4CD5-8D0E-1D00E613A219}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{95E188F9-31F3-4CD5-8D0E-1D00E613A219}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{95E188F9-31F3-4CD5-8D0E-1D00E613A219}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{95E188F9-31F3-4CD5-8D0E-1D00E613A219}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

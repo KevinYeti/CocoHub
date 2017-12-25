@@ -44,13 +44,13 @@ namespace Tracer.Cocohub.Context
             return tracer;
         }
 
-        private static string[] _spliter = new string[] { ":" };
+        public static string[] Spliter = new string[] { ":" };
 
         public static TracerIndentity FromString(string s)
         {
             if (s.Contains(":"))
             {
-                var splits = s.Split(_spliter, StringSplitOptions.RemoveEmptyEntries );
+                var splits = s.Split(Spliter, StringSplitOptions.RemoveEmptyEntries );
                 return TracerIndentity.Create(splits[0], splits[1]);
             }
             else
