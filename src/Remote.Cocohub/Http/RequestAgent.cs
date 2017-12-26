@@ -20,6 +20,7 @@ namespace Remote.Cocohub.Http
                 {
                     if (TracerContext.Tracer != null)
                     {
+                        TracerContext.Tracer.Enter();
                         http.DefaultRequestHeaders.Add("Cocohub-Tracer", TracerContext.Tracer.ToString());
                     }
 
@@ -28,6 +29,8 @@ namespace Remote.Cocohub.Http
 
                     var code = response.StatusCode;
                     var content = response.Content.ReadAsStringAsync().Result;
+                    //
+                    TracerContext.Tracer.Leave();
                     //
                     callback(code, content);
                 }

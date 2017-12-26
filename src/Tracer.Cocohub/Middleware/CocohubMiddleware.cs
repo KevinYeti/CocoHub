@@ -24,19 +24,6 @@ namespace Tracer.Cocohub.Middleware
                 if (context.Request.Headers.Keys.Contains(TracerContext._tracer))
                 {
                     var tracer = context.Request.Headers[TracerContext._tracer].ToString();
-                    //by default: the span should enter one level when a remote call is happened.
-                    //if (tracer.Contains(":"))
-                    //{
-                    //    var splits = tracer.Split(TracerIndentity.Spliter, StringSplitOptions.RemoveEmptyEntries);
-                    //    string spanId = splits[1];
-                    //    if (spanId.Contains("."))
-                    //    {
-                    //        string broFuncSpanNum = spanId.Substring(spanId.LastIndexOf(".") + 1);
-                    //        int cntFuncSpanNum = Convert.ToInt32(broFuncSpanNum) + 1;
-                    //        spanId = spanId.Substring(0, spanId.LastIndexOf(".") + 1) + cntFuncSpanNum.ToString();
-                    //    }
-                    //    tracer = splits[0] + TracerIndentity.Spliter[0] + spanId;
-                    //}
 
                     context.Items.Add(TracerContext._tracer, TracerIndentity.FromString(tracer));
                 }
