@@ -79,9 +79,9 @@ namespace Tracer.Cocohub.Context
             }
             else if (_spanId.Length < _lastSpanId.Length)
             {
-                _lastSpanId = _spanId;
                 string broFuncSpanNum = _lastSpanId.Substring(_lastSpanId.LastIndexOf(".") + 1);
                 int cntFuncSpanNum = Convert.ToInt32(broFuncSpanNum) + 1;
+                _lastSpanId = _spanId;
                 _spanId = _spanId + "." + cntFuncSpanNum.ToString();
             }
             else
@@ -96,6 +96,31 @@ namespace Tracer.Cocohub.Context
             _lastSpanId = _spanId;
             _spanId = _spanId.Substring(0, _spanId.LastIndexOf("."));
         }
+
+        //public string TryHttpRpcEnter()
+        //{
+        //    string _rpcSpanId = _spanId;
+        //    if (_spanId.Length > _lastSpanId.Length)
+        //    {
+        //        _rpcSpanId += ".1";
+        //    }
+        //    else if (_spanId.Length < _lastSpanId.Length)
+        //    {
+        //        string broFuncSpanNum = _rpcSpanId.Substring(_rpcSpanId.LastIndexOf(".") + 1);
+        //        int cntFuncSpanNum = Convert.ToInt32(broFuncSpanNum) + 1;
+        //        _rpcSpanId = _rpcSpanId + "." + cntFuncSpanNum.ToString();
+        //    }
+        //    else
+        //    {
+        //        //剩下_spanId.Length == _lastSpanId.Length的情况, 理论上不会出现
+        //        throw new Exception();
+        //    }
+
+        //    string s = string.Empty;
+        //    s = string.Format("{0}:{1}", _tracerId, _rpcSpanId);
+
+        //    return s;
+        //}
 
         private string _tracerId = string.Empty;
         public string TracerId { get { return _tracerId; } }

@@ -20,8 +20,9 @@ namespace Remote.Cocohub.Http
                 {
                     if (TracerContext.Tracer != null)
                     {
+                        //http.DefaultRequestHeaders.Add("Cocohub-Tracer-Rpc", TracerContext.Tracer.TryHttpRpcEnter());
                         TracerContext.Tracer.Enter();
-                        http.DefaultRequestHeaders.Add("Cocohub-Tracer", TracerContext.Tracer.ToString());
+                        http.DefaultRequestHeaders.Add("Cocohub-Tracer-Rpc", TracerContext.Tracer.ToString());
                     }
 
                     //等待回应
@@ -29,7 +30,7 @@ namespace Remote.Cocohub.Http
 
                     var code = response.StatusCode;
                     var content = response.Content.ReadAsStringAsync().Result;
-                    //
+
                     TracerContext.Tracer.Leave();
                     //
                     callback(code, content);

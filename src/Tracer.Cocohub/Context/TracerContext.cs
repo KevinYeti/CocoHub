@@ -5,6 +5,7 @@ namespace Tracer.Cocohub.Context
     public static class TracerContext
     {
         internal static string _tracer = "Cocohub-Tracer";
+        internal static string _tracerRpc = "Cocohub-Tracer-Rpc";
 
         private static IHttpContextAccessor _contextAccessor;
 
@@ -43,19 +44,14 @@ namespace Tracer.Cocohub.Context
             {
                 return;
             }
-            else if (!http.Items.ContainsKey(_tracer))
+            else if (!http.Items.ContainsKey(_tracer) && http.Items.ContainsKey(_tracerRpc))
             {
-                //理论上此处代码应该走不进来，因为middleware中已经做过此事
-                //when _tracer is in header but not in context 
-                if (http.Request.Headers.Keys.Contains(_tracer))
-                {
-                    http.Items.Add(_tracer, TracerIndentity.FromString(http.Request.Headers[_tracer].ToString()));
-                }
-                else
-                {
-                    http.Items.Add(_tracer, TracerIndentity.Create());
-                }
+                //在此处转换带rpc标记的tracer为普通tracer,并且不需要再次Enter,因为在调用前已经做过TryRpcEnter
+                http.Items.Add(_tracer, http.Items[_tracerRpc]);
+                http.Items.Remove(_tracerRpc);
+                return;
             }
+
 
             var tracer = http.Items[_tracer] as TracerIndentity;
             tracer.Enter();

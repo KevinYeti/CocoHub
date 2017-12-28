@@ -18,7 +18,8 @@ namespace Tracer.Cocohub.Middleware
         public Task Invoke(HttpContext context)
         {
             //init tracer in context 
-            if (!context.Items.ContainsKey(TracerContext._tracer))
+            if (!context.Items.ContainsKey(TracerContext._tracer) 
+                && !context.Items.ContainsKey(TracerContext._tracerRpc))
             {
                 //when _tracer is in header but not in context 
                 if (context.Request.Headers.Keys.Contains(TracerContext._tracer))
@@ -27,8 +28,16 @@ namespace Tracer.Cocohub.Middleware
 
                     context.Items.Add(TracerContext._tracer, TracerIndentity.FromString(tracer));
                 }
+                else if (context.Request.Headers.Keys.Contains(TracerContext._tracerRpc))
+                {
+                    //request from RPC 
+                    var tracerRpc = context.Request.Headers[TracerContext._tracerRpc].ToString();
+
+                    context.Items.Add(TracerContext._tracerRpc, TracerIndentity.FromString(tracerRpc));
+                }
                 else
                 {
+                    //new request, new context 
                     context.Items.Add(TracerContext._tracer, TracerIndentity.Create()); 
                 }
             }
