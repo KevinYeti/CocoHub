@@ -20,7 +20,6 @@ namespace Remote.Cocohub.Http
                 {
                     if (TracerContext.Tracer != null)
                     {
-                        //http.DefaultRequestHeaders.Add("Cocohub-Tracer-Rpc", TracerContext.Tracer.TryHttpRpcEnter());
                         TracerContext.Tracer.Enter();
                         http.DefaultRequestHeaders.Add("Cocohub-Tracer-Rpc", TracerContext.Tracer.ToString());
                     }
@@ -53,8 +52,9 @@ namespace Remote.Cocohub.Http
                 using (var http = new HttpClient(handler))
                 {
                     if (TracerContext.Tracer != null)
-                        http.DefaultRequestHeaders.Add("Cocohub-Tracer", TracerContext.Tracer.ToString());
-
+                    {
+                        http.DefaultRequestHeaders.Add("Cocohub-Tracer-Rpc", TracerContext.Tracer.EnterAsync());
+                    }
 
                     //await异步等待回应
                     var response = await http.GetAsync(uri);
@@ -82,14 +82,18 @@ namespace Remote.Cocohub.Http
                 using (var http = new HttpClient(handler))
                 {
                     if (TracerContext.Tracer != null)
-                        http.DefaultRequestHeaders.Add("Cocohub-Tracer", TracerContext.Tracer.ToString());
-
+                    {
+                        TracerContext.Tracer.Enter();
+                        http.DefaultRequestHeaders.Add("Cocohub-Tracer-Rpc", TracerContext.Tracer.ToString());
+                    }
 
                     //等待回应
                     var response = http.PostAsync(uri, body).Result;
 
                     var code = response.StatusCode;
                     var content = response.Content.ReadAsStringAsync().Result;
+
+                    TracerContext.Tracer.Leave();
                     //
                     callback(code, content);
                 }
@@ -111,8 +115,9 @@ namespace Remote.Cocohub.Http
                 using (var http = new HttpClient(handler))
                 {
                     if (TracerContext.Tracer != null)
-                        http.DefaultRequestHeaders.Add("Cocohub-Tracer", TracerContext.Tracer.ToString());
-
+                    {
+                        http.DefaultRequestHeaders.Add("Cocohub-Tracer-Rpc", TracerContext.Tracer.EnterAsync());
+                    }
 
                     //await异步等待回应
                     var response = await http.PostAsync(uri, body);
@@ -140,7 +145,10 @@ namespace Remote.Cocohub.Http
                 using (var http = new HttpClient(handler))
                 {
                     if (TracerContext.Tracer != null)
-                        http.DefaultRequestHeaders.Add("Cocohub-Tracer", TracerContext.Tracer.ToString());
+                    {
+                        TracerContext.Tracer.Enter();
+                        http.DefaultRequestHeaders.Add("Cocohub-Tracer-Rpc", TracerContext.Tracer.ToString());
+                    }
 
 
                     //等待回应
@@ -148,6 +156,8 @@ namespace Remote.Cocohub.Http
 
                     var code = response.StatusCode;
                     var content = response.Content.ReadAsStringAsync().Result;
+
+                    TracerContext.Tracer.Leave();
                     //
                     callback(code, content);
                 }
@@ -169,8 +179,9 @@ namespace Remote.Cocohub.Http
                 using (var http = new HttpClient(handler))
                 {
                     if (TracerContext.Tracer != null)
-                        http.DefaultRequestHeaders.Add("Cocohub-Tracer", TracerContext.Tracer.ToString());
-
+                    {
+                        http.DefaultRequestHeaders.Add("Cocohub-Tracer-Rpc", TracerContext.Tracer.EnterAsync());
+                    }
 
                     //await异步等待回应
                     var response = await http.DeleteAsync(uri);
@@ -198,7 +209,10 @@ namespace Remote.Cocohub.Http
                 using (var http = new HttpClient(handler))
                 {
                     if (TracerContext.Tracer != null)
-                        http.DefaultRequestHeaders.Add("Cocohub-Tracer", TracerContext.Tracer.ToString());
+                    {
+                        TracerContext.Tracer.Enter();
+                        http.DefaultRequestHeaders.Add("Cocohub-Tracer-Rpc", TracerContext.Tracer.ToString());
+                    }
 
 
                     //等待回应
@@ -206,6 +220,8 @@ namespace Remote.Cocohub.Http
 
                     var code = response.StatusCode;
                     var content = response.Content.ReadAsStringAsync().Result;
+
+                    TracerContext.Tracer.Leave();
                     //
                     callback(code, content);
                 }
@@ -227,8 +243,9 @@ namespace Remote.Cocohub.Http
                 using (var http = new HttpClient(handler))
                 {
                     if (TracerContext.Tracer != null)
-                        http.DefaultRequestHeaders.Add("Cocohub-Tracer", TracerContext.Tracer.ToString());
-
+                    {
+                        http.DefaultRequestHeaders.Add("Cocohub-Tracer-Rpc", TracerContext.Tracer.EnterAsync());
+                    }
 
                     //await异步等待回应
                     var response = await http.PutAsync(uri, body);

@@ -97,30 +97,31 @@ namespace Tracer.Cocohub.Context
             _spanId = _spanId.Substring(0, _spanId.LastIndexOf("."));
         }
 
-        //public string TryHttpRpcEnter()
-        //{
-        //    string _rpcSpanId = _spanId;
-        //    if (_spanId.Length > _lastSpanId.Length)
-        //    {
-        //        _rpcSpanId += ".1";
-        //    }
-        //    else if (_spanId.Length < _lastSpanId.Length)
-        //    {
-        //        string broFuncSpanNum = _rpcSpanId.Substring(_rpcSpanId.LastIndexOf(".") + 1);
-        //        int cntFuncSpanNum = Convert.ToInt32(broFuncSpanNum) + 1;
-        //        _rpcSpanId = _rpcSpanId + "." + cntFuncSpanNum.ToString();
-        //    }
-        //    else
-        //    {
-        //        //剩下_spanId.Length == _lastSpanId.Length的情况, 理论上不会出现
-        //        throw new Exception();
-        //    }
+        public string EnterAsync()
+        {
+            //计算逻辑原理基本和Enter一致,但不记录_lastSpanId,仅去获得Enter后应得的spanId
+            string _asyncSpanId = _spanId;
+            if (_spanId.Length > _lastSpanId.Length)
+            {
+                _asyncSpanId += ".1";
+            }
+            else if (_spanId.Length < _lastSpanId.Length)
+            {
+                string broFuncSpanNum = _asyncSpanId.Substring(_asyncSpanId.LastIndexOf(".") + 1);
+                int cntFuncSpanNum = Convert.ToInt32(broFuncSpanNum) + 1;
+                _asyncSpanId = _asyncSpanId + "." + cntFuncSpanNum.ToString();
+            }
+            else
+            {
+                //剩下_spanId.Length == _lastSpanId.Length的情况, 理论上不会出现
+                throw new Exception();
+            }
 
-        //    string s = string.Empty;
-        //    s = string.Format("{0}:{1}", _tracerId, _rpcSpanId);
+            string s = string.Empty;
+            s = string.Format("{0}:{1}", _tracerId, _asyncSpanId);
 
-        //    return s;
-        //}
+            return s;
+        }
 
         private string _tracerId = string.Empty;
         public string TracerId { get { return _tracerId; } }
