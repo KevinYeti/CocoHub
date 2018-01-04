@@ -7,8 +7,8 @@ namespace Logger.Cocohub.Core
 {
     public static class LogWriter
     {
-        private static string _directory = "log\\";
-        private static string _path = _directory + "cocohub.log.{0}.log";
+        private static string _directory = "log";
+        private static string _path = _directory + "/cocohub.{0}.log";
         private static int _length = 1024 * 1024 * 4;
 
         private static string getLogPath() 
@@ -19,15 +19,15 @@ namespace Logger.Cocohub.Core
             }
 
             //
-            var files = Directory.GetFiles(_directory, "cocohub.log.*.log", SearchOption.AllDirectories);
+            var files = Directory.GetFiles(_directory, "cocohub.*.log", SearchOption.AllDirectories);
             if (files == null || files.Length == 0)
-                return string.Format(_path, DateTime.Now.ToString("yyyyMMddHHmmssfff"));
+                return string.Format(_path, DateTime.Now.ToString("yyyyMMdd.HHmmss.fff"));
             else
             {
                 SortedSet<string> set = new SortedSet<string>(files);
                 var latest = set.Max;
                 if (new FileInfo(latest).Length > _length)
-                    return string.Format(_path, DateTime.Now.ToString("yyyyMMddHHmmssfff"));
+                    return string.Format(_path, DateTime.Now.ToString("yyyyMMdd.HHmmss.fff"));
                 else
                     return latest;
             }
