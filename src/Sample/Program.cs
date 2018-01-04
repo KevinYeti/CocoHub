@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Logger.Cocohub;
+using System;
 using System.Threading;
 
 namespace Sample
@@ -7,6 +8,8 @@ namespace Sample
     {
         static void Main(string[] args)
         {
+            LogStartup.Start();
+
             Foo(0, null);
             Foo(100, new Uri("http://www.baidu.com"));
             Console.WriteLine("Hello World!");

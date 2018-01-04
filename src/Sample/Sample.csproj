@@ -10,6 +10,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Logger.Cocohub\Logger.Cocohub.csproj" />
     <ProjectReference Include="..\Tracer.Cocohub\Tracer.Cocohub.csproj" />
   </ItemGroup>
 

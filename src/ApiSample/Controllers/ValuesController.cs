@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Remote.Cocohub.Http;
@@ -20,7 +21,7 @@ namespace ApiSample.Controllers
 
             Foo(123, null);
 
-            RequestAgent.Get(new Uri("http://localhost:13926/api/values/1"), (code, content) => {
+            RequestAgent.Send(HttpMethod.Get, new Uri("http://localhost:6000/api/values/1"), null, (code, content) => {
                 if (code == System.Net.HttpStatusCode.OK)
                 {
                     result[1] = "333";

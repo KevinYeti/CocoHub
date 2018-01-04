@@ -1,266 +1,131 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Net;
 using System.Net.Http;
+using Tracer.Cocohub;
 using Tracer.Cocohub.Context;
-using TracerAttributes;
+
 
 namespace Remote.Cocohub.Http
 {
     public static class RequestAgent
     {
-        public static void Get(Uri uri, Action<HttpStatusCode, string> callback)
+        private static string _textEnterWithTracer = "{{\"Action\":\"Enter\",\"Method\":\"{0}\",\"Params\":\"{1}\",\"TracerId\":\"{2}\",\"SpanId\":\"{3}\"}}";
+        private static string _textReturnWithTracer = "{{\"Action\":\"Return\",\"Method\":\"{0}\",\"Result\":\"{1}\",\"Time\":{2},\"TracerId\":\"{3}\",\"SpanId\":\"{4}\"}}";
+        private static string _exception = "$exception={0}";
+        private static HttpClient _httpClient = new HttpClient();
+
+
+        public static void Send(HttpMethod method, Uri uri, HttpContent body, Action<HttpStatusCode, string> callback)
         {
+            bool hasEntered = false;
+            var sw = new Stopwatch();
+            sw.Start();
+
             try
             {
-                //设置HttpClientHandler的AutomaticDecompression
-                var handler = new HttpClientHandler();
-
-                //创建HttpClient（注意传入HttpClientHandler）
-                using (var http = new HttpClient(handler))
+                using (var request = new HttpRequestMessage(method, uri))
                 {
+                    if (body != null)
+                    {
+                        request.Content = body;
+                    }
+
                     if (TracerContext.Tracer != null)
                     {
                         TracerContext.Tracer.Enter();
-                        http.DefaultRequestHeaders.Add("Cocohub-Tracer-Rpc", TracerContext.Tracer.ToString());
+                        hasEntered = true;
+
+                        request.Headers.Add("Cocohub-Tracer-Rpc", TracerContext.Tracer.ToString());
                     }
+                    using (var response = _httpClient.SendAsync(request).Result)
+                    {
+                        var code = response.StatusCode;
+                        var content = response.Content.ReadAsStringAsync().Result;
 
-                    //等待回应
-                    var response = http.GetAsync(uri).Result;
+                        TracerContext.Tracer.Leave();
+                        //
+                        callback?.Invoke(code, content);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                sw.Stop();
+                string logEx = string.Format(_exception, ex.Message + ex.StackTrace);
+                string logEnter = string.Format(_textEnterWithTracer, "Http" + method.Method, uri.ToString(), TracerContext.Tracer.TracerId, TracerContext.Tracer.SpanId);
+                string logReturn = string.Format(_textReturnWithTracer, "Http" + method.Method, logEx, sw.ElapsedMilliseconds, TracerContext.Tracer.TracerId, TracerContext.Tracer.SpanId);
 
-                    var code = response.StatusCode;
-                    var content = response.Content.ReadAsStringAsync().Result;
-
+                if (hasEntered)
+                {
                     TracerContext.Tracer.Leave();
-                    //
-                    callback(code, content);
                 }
-            }
-            catch (Exception ex)
-            {
+
+                //write log
+                Log.Error(logEnter);
+                Log.Error(logReturn);
+
                 callback(HttpStatusCode.BadGateway, ex.Message);
+            }
+            finally
+            {
+                if (sw.IsRunning)
+                {
+                    sw.Stop();
+                }
             }
         }
 
-        public static async void GetAsync(Uri uri, Action<HttpStatusCode, string> callback)
+        public static async void SendAsync(HttpMethod method, Uri uri, HttpContent body, Action<HttpStatusCode, string> callback)
         {
+            var sw = new Stopwatch();
+            sw.Start();
+            var tracer = TracerContext.Tracer.EnterAsync();
+
             try
             {
-                //设置HttpClientHandler的AutomaticDecompression
-                var handler = new HttpClientHandler();
-
-                //创建HttpClient（注意传入HttpClientHandler）
-                using (var http = new HttpClient(handler))
+                using (var request = new HttpRequestMessage(method, uri))
                 {
-                    if (TracerContext.Tracer != null)
+                    if (body != null)
                     {
-                        http.DefaultRequestHeaders.Add("Cocohub-Tracer-Rpc", TracerContext.Tracer.EnterAsync());
+                        request.Content = body;
                     }
 
-                    //await异步等待回应
-                    var response = await http.GetAsync(uri);
+                    if (TracerContext.Tracer != null)
+                    {
+                        request.Headers.Add("Cocohub-Tracer-Rpc", tracer);
+                    }
+                    using (var response = await _httpClient.SendAsync(request))
+                    {
+                        var code = response.StatusCode;
+                        var content = await response.Content.ReadAsStringAsync();
 
-                    var code = response.StatusCode;
-                    var content = await response.Content.ReadAsStringAsync();
-                    //
-                    callback(code, content);
+                        //
+                        callback?.Invoke(code, content);
+                    }
                 }
             }
             catch (Exception ex)
             {
+                sw.Stop();
+                var tracers = tracer.Split(TracerIndentity.Spliter, StringSplitOptions.RemoveEmptyEntries);
+                string logEx = string.Format(_exception, ex.Message + ex.StackTrace);
+                string logEnter = string.Format(_textEnterWithTracer, "Http" + method.Method, uri.ToString(), tracers[0], tracers[1]);
+                string logReturn = string.Format(_textReturnWithTracer, "Http" + method.Method, logEx, sw.ElapsedMilliseconds, tracers[0], tracers[1]);
+
+                //write log
+                Log.Error(logEnter);
+                Log.Error(logReturn);
+
                 callback(HttpStatusCode.BadGateway, ex.Message);
             }
-        }
-
-        public static void Post(Uri uri, HttpContent body, Action<HttpStatusCode, string> callback)
-        {
-            try
+            finally
             {
-                //设置HttpClientHandler的AutomaticDecompression
-                var handler = new HttpClientHandler();
-
-                //创建HttpClient（注意传入HttpClientHandler）
-                using (var http = new HttpClient(handler))
+                if (sw.IsRunning)
                 {
-                    if (TracerContext.Tracer != null)
-                    {
-                        TracerContext.Tracer.Enter();
-                        http.DefaultRequestHeaders.Add("Cocohub-Tracer-Rpc", TracerContext.Tracer.ToString());
-                    }
-
-                    //等待回应
-                    var response = http.PostAsync(uri, body).Result;
-
-                    var code = response.StatusCode;
-                    var content = response.Content.ReadAsStringAsync().Result;
-
-                    TracerContext.Tracer.Leave();
-                    //
-                    callback(code, content);
+                    sw.Stop();
                 }
             }
-            catch (Exception ex)
-            {
-                callback(HttpStatusCode.BadGateway, ex.Message);
-            }
         }
-
-        public static async void PostAsync(Uri uri, HttpContent body, Action<HttpStatusCode, string> callback)
-        {
-            try
-            {
-                //设置HttpClientHandler的AutomaticDecompression
-                var handler = new HttpClientHandler();
-
-                //创建HttpClient（注意传入HttpClientHandler）
-                using (var http = new HttpClient(handler))
-                {
-                    if (TracerContext.Tracer != null)
-                    {
-                        http.DefaultRequestHeaders.Add("Cocohub-Tracer-Rpc", TracerContext.Tracer.EnterAsync());
-                    }
-
-                    //await异步等待回应
-                    var response = await http.PostAsync(uri, body);
-
-                    var code = response.StatusCode;
-                    var content = await response.Content.ReadAsStringAsync();
-                    //
-                    callback(code, content);
-                }
-            }
-            catch (Exception ex)
-            {
-                callback(HttpStatusCode.BadGateway, ex.Message);
-            }
-        }
-
-        public static void Delete(Uri uri, Action<HttpStatusCode, string> callback)
-        {
-            try
-            {
-                //设置HttpClientHandler的AutomaticDecompression
-                var handler = new HttpClientHandler();
-
-                //创建HttpClient（注意传入HttpClientHandler）
-                using (var http = new HttpClient(handler))
-                {
-                    if (TracerContext.Tracer != null)
-                    {
-                        TracerContext.Tracer.Enter();
-                        http.DefaultRequestHeaders.Add("Cocohub-Tracer-Rpc", TracerContext.Tracer.ToString());
-                    }
-
-
-                    //等待回应
-                    var response = http.DeleteAsync(uri).Result;
-
-                    var code = response.StatusCode;
-                    var content = response.Content.ReadAsStringAsync().Result;
-
-                    TracerContext.Tracer.Leave();
-                    //
-                    callback(code, content);
-                }
-            }
-            catch (Exception ex)
-            {
-                callback(HttpStatusCode.BadGateway, ex.Message);
-            }
-        }
-
-        public static async void DeleteAsync(Uri uri, Action<HttpStatusCode, string> callback)
-        {
-            try
-            {
-                //设置HttpClientHandler的AutomaticDecompression
-                var handler = new HttpClientHandler();
-
-                //创建HttpClient（注意传入HttpClientHandler）
-                using (var http = new HttpClient(handler))
-                {
-                    if (TracerContext.Tracer != null)
-                    {
-                        http.DefaultRequestHeaders.Add("Cocohub-Tracer-Rpc", TracerContext.Tracer.EnterAsync());
-                    }
-
-                    //await异步等待回应
-                    var response = await http.DeleteAsync(uri);
-
-                    var code = response.StatusCode;
-                    var content = await response.Content.ReadAsStringAsync();
-                    //
-                    callback(code, content);
-                }
-            }
-            catch (Exception ex)
-            {
-                callback(HttpStatusCode.BadGateway, ex.Message);
-            }
-        }
-
-        public static void Put(Uri uri, HttpContent body, Action<HttpStatusCode, string> callback)
-        {
-            try
-            {
-                //设置HttpClientHandler的AutomaticDecompression
-                var handler = new HttpClientHandler();
-
-                //创建HttpClient（注意传入HttpClientHandler）
-                using (var http = new HttpClient(handler))
-                {
-                    if (TracerContext.Tracer != null)
-                    {
-                        TracerContext.Tracer.Enter();
-                        http.DefaultRequestHeaders.Add("Cocohub-Tracer-Rpc", TracerContext.Tracer.ToString());
-                    }
-
-
-                    //等待回应
-                    var response = http.PutAsync(uri, body).Result;
-
-                    var code = response.StatusCode;
-                    var content = response.Content.ReadAsStringAsync().Result;
-
-                    TracerContext.Tracer.Leave();
-                    //
-                    callback(code, content);
-                }
-            }
-            catch (Exception ex)
-            {
-                callback(HttpStatusCode.BadGateway, ex.Message);
-            }
-        }
-
-        public static async void PutAsync(Uri uri, HttpContent body, Action<HttpStatusCode, string> callback)
-        {
-            try
-            {
-                //设置HttpClientHandler的AutomaticDecompression
-                var handler = new HttpClientHandler();
-
-                //创建HttpClient（注意传入HttpClientHandler）
-                using (var http = new HttpClient(handler))
-                {
-                    if (TracerContext.Tracer != null)
-                    {
-                        http.DefaultRequestHeaders.Add("Cocohub-Tracer-Rpc", TracerContext.Tracer.EnterAsync());
-                    }
-
-                    //await异步等待回应
-                    var response = await http.PutAsync(uri, body);
-
-                    var code = response.StatusCode;
-                    var content = await response.Content.ReadAsStringAsync();
-                    //
-                    callback(code, content);
-                }
-            }
-            catch (Exception ex)
-            {
-                callback(HttpStatusCode.BadGateway, ex.Message);
-            }
-        }
-
     }
 }

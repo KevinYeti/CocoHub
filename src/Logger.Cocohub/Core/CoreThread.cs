@@ -17,7 +17,7 @@ namespace Logger.Cocohub.Core
                 if (LogCollector.Count() > 3000)
                     Thread.Sleep(1000);
                 else
-                    Thread.Sleep(1000);
+                    Thread.Sleep(1000);     //DEBUG:set to 1000 when debuging so that you can get the result immediately.
             }
         }
     }
