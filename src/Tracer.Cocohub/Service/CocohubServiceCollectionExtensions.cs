@@ -1,11 +1,8 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Logger.Cocohub;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using Logger.Cocohub;
 
-namespace Microsoft.Extensions.DependencyInjection
+namespace Tracer.Cocohub.Service
 {
     public static class CocohubServiceCollectionExtensions
     {

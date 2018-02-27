@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Tracer.Cocohub.Middleware;
+using Tracer.Cocohub.Service;
 
 namespace ApiSample
 {
@@ -32,6 +33,7 @@ namespace ApiSample
             app.UseCocohub();
 
             app.UseMvc();
+
         }
     }
 }
