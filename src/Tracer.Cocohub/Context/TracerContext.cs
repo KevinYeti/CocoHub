@@ -52,10 +52,7 @@ namespace Tracer.Cocohub.Context
 
             var tracer = http.Items[_tracer] as TracerIndentity;
             if (tracer == null)
-            {
-                System.Console.WriteLine("_tracer is null");
                 return;
-            }
             else
                 tracer.Enter();
         }
