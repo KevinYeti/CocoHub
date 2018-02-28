@@ -1,6 +1,7 @@
 ﻿using Logger.Cocohub;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace Tracer.Cocohub.Service
 {
@@ -8,8 +9,7 @@ namespace Tracer.Cocohub.Service
     {
         public static void AddCocohub(this IServiceCollection services)
         {
-            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-
+            services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             LogStartup.Start();
         }
     }

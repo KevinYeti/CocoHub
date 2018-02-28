@@ -9,10 +9,8 @@ namespace Tracer.Cocohub.Context
 
         private static IHttpContextAccessor _contextAccessor;
 
-        public static HttpContext CurrentHttpContext
-        {
-            get
-            {
+        public static HttpContext CurrentHttpContext {
+            get {
                 if (_contextAccessor == null)
                     return null;
                 else
@@ -54,7 +52,10 @@ namespace Tracer.Cocohub.Context
 
             var tracer = http.Items[_tracer] as TracerIndentity;
             if (tracer == null)
-                return; 
+            {
+                System.Console.WriteLine("_tracer is null");
+                return;
+            }
             else
                 tracer.Enter();
         }
