@@ -17,36 +17,44 @@ namespace Tracer.Cocohub.Middleware
 
         public Task Invoke(HttpContext context)
         {
-            //init tracer in context 
-            if (!context.Items.ContainsKey(TracerContext._tracer) 
-                && !context.Items.ContainsKey(TracerContext._tracerRpc))
+            try
             {
-                //when _tracer is in header but not in context 
-                if (context.Request.Headers.Keys.Contains(TracerContext._tracer))
+                //init tracer in context 
+                if (!context.Items.ContainsKey(TracerContext._tracer)
+                    && !context.Items.ContainsKey(TracerContext._tracerRpc))
                 {
-                    var tracer = context.Request.Headers[TracerContext._tracer].ToString();
+                    //when _tracer is in header but not in context 
+                    if (context.Request.Headers.Keys.Contains(TracerContext._tracer))
+                    {
+                        var tracer = context.Request.Headers[TracerContext._tracer].ToString();
 
-                    context.Items.Add(TracerContext._tracer, TracerIndentity.FromString(tracer));
-                }
-                else if (context.Request.Headers.Keys.Contains(TracerContext._tracerRpc))
-                {
-                    //request from RPC 
-                    var tracerRpc = context.Request.Headers[TracerContext._tracerRpc].ToString();
+                        context.Items.Add(TracerContext._tracer, TracerIndentity.FromString(tracer));
+                    }
+                    else if (context.Request.Headers.Keys.Contains(TracerContext._tracerRpc))
+                    {
+                        //request from RPC 
+                        var tracerRpc = context.Request.Headers[TracerContext._tracerRpc].ToString();
 
-                    context.Items.Add(TracerContext._tracerRpc, TracerIndentity.FromString(tracerRpc));
+                        context.Items.Add(TracerContext._tracerRpc, TracerIndentity.FromString(tracerRpc));
+                    }
+                    else
+                    {
+                        //new request, new context 
+                        context.Items.Add(TracerContext._tracer, TracerIndentity.Create());
+                    }
                 }
-                else
+
+                //add tracerId to response header for return
+                if (!context.Response.Headers.ContainsKey(TracerContext._tracer)
+                    && TracerIndentity.Current != null)
                 {
-                    //new request, new context 
-                    context.Items.Add(TracerContext._tracer, TracerIndentity.Create()); 
+                    context.Response.Headers.Add(TracerContext._tracer, TracerIndentity.Current.ToString());
                 }
             }
-
-            //add tracerId to response header when return
-            if (!context.Response.Headers.ContainsKey(TracerContext._tracer) 
-                && TracerIndentity.Current != null)
+            catch (Exception ex)
             {
-                context.Response.Headers.Add(TracerContext._tracer, TracerIndentity.Current.ToString());
+                Console.WriteLine(ex.Message);
+                Console.WriteLine(ex.StackTrace);
             }
 
             // Call the next delegate/middleware in the pipeline
