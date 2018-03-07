@@ -5,21 +5,20 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Folder Include="log\" />
     <Folder Include="wwwroot\" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Cocohub.Tracer.Fody" Version="2.0.0.8" />
+    <PackageReference Include="Logger.Cocohub" Version="1.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.0" />
-    <PackageReference Include="Tracer.Fody" Version="1.6.0" />
+    <PackageReference Include="Remote.Cocohub" Version="1.0.1" />
+    <PackageReference Include="Tracer.Cocohub" Version="1.2.0" />
   </ItemGroup>
 
   <ItemGroup>
     <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="2.0.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\Tracer.Cocohub\Tracer.Cocohub.csproj" />
-    <ProjectReference Include="..\Remote.Cocohub\Remote.Cocohub.csproj" />
   </ItemGroup>
 
 </Project>

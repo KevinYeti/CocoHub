@@ -21,7 +21,8 @@ namespace ApiSample.Controllers
 
             Foo(123, null);
 
-            RequestAgent.Send(HttpMethod.Get, new Uri("http://localhost:6000/api/values/1"), null, (code, content) => {
+            RequestAgent.Send(HttpMethod.Get, new Uri("http://localhost:6000/api/values/1"), null, (code, content) =>
+            {
                 if (code == System.Net.HttpStatusCode.OK)
                 {
                     result[1] = "333";
