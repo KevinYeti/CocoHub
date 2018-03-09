@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net46;netstandard2.0</TargetFrameworks>
+    <PackageVersion>1.0.0.20</PackageVersion>
+    <Description>Cocohub.Tracer.Fody</Description>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <PackageId></PackageId>
+    <Authors>clawit</Authors>
+    <Copyright></Copyright>
+    <PackageTags>Tracer, ILWeaving, Fody, Cecil, AOP</PackageTags>
+    <AssemblyVersion>1.0.0.20</AssemblyVersion>
+    <FileVersion>1.0.0.20</FileVersion>
+    <Version>1.0.0.20</Version>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FodyHelpers" Version="2.3.20" />
+  </ItemGroup>
+</Project>

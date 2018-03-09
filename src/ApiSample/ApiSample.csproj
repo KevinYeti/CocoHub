@@ -10,11 +10,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Cocohub.Tracer.Fody" Version="2.0.0.8" />
-    <PackageReference Include="Logger.Cocohub" Version="1.0.0" />
+    <PackageReference Include="Cocohub.Tracer.Fody" Version="2.0.0.20" />
+    <PackageReference Include="Fody" Version="2.3.20" />
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.0" />
-    <PackageReference Include="Remote.Cocohub" Version="1.0.1" />
-    <PackageReference Include="Tracer.Cocohub" Version="1.2.0" />
+    <PackageReference Include="Remote.Cocohub" Version="1.0.0" />
+    <PackageReference Include="Tracer.Cocohub" Version="1.2.0.20" />
   </ItemGroup>
 
   <ItemGroup>
