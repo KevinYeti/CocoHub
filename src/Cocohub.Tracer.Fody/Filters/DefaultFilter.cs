@@ -53,9 +53,9 @@ namespace Cocohub.Tracer.Fody.Filters
         {
             if (!definition.IsPropertyAccessor())
             {
-                if (definition.CustomAttributes.Any(attr => attr.AttributeType.FullName.Equals("TracerAttributes.TraceOn", StringComparison.Ordinal)))
+                if (definition.CustomAttributes.Any(attr => attr.AttributeType.FullName.Equals("Tracer.Cocohub.TraceOn", StringComparison.Ordinal)))
                     return true;
-                if (definition.CustomAttributes.Any(attr => attr.AttributeType.FullName.Equals("TracerAttributes.NoTrace", StringComparison.Ordinal)))
+                if (definition.CustomAttributes.Any(attr => attr.AttributeType.FullName.Equals("Tracer.Cocohub.NoTrace", StringComparison.Ordinal)))
                     return false;
             }
             else
@@ -64,9 +64,9 @@ namespace Cocohub.Tracer.Fody.Filters
                     definition.DeclaringType.Properties.FirstOrDefault(prop => prop.GetMethod == definition || prop.SetMethod == definition);
                 if (correspondingProp != null)
                 {
-                    if (correspondingProp.CustomAttributes.Any(attr => attr.AttributeType.FullName.Equals("TracerAttributes.TraceOn", StringComparison.Ordinal)))
+                    if (correspondingProp.CustomAttributes.Any(attr => attr.AttributeType.FullName.Equals("Tracer.Cocohub.TraceOn", StringComparison.Ordinal)))
                         return true;
-                    if (correspondingProp.CustomAttributes.Any(attr => attr.AttributeType.FullName.Equals("TracerAttributes.NoTrace", StringComparison.Ordinal)))
+                    if (correspondingProp.CustomAttributes.Any(attr => attr.AttributeType.FullName.Equals("Tracer.Cocohub.NoTrace", StringComparison.Ordinal)))
                         return false;
                 }
             }
@@ -107,13 +107,13 @@ namespace Cocohub.Tracer.Fody.Filters
         {
             //with NoTrace present skip tracing
             if (type.CustomAttributes.Any(
-                attr => attr.AttributeType.FullName.Equals("TracerAttributes.NoTrace", StringComparison.Ordinal)))
+                attr => attr.AttributeType.FullName.Equals("Tracer.Cocohub.NoTrace", StringComparison.Ordinal)))
             {
                 return TraceAttributeInfo.NoTrace();
             }
 
             var traceOnAttribute = type.CustomAttributes.FirstOrDefault(
-                attr => attr.AttributeType.FullName.Equals("TracerAttributes.TraceOn", StringComparison.Ordinal));
+                attr => attr.AttributeType.FullName.Equals("Tracer.Cocohub.TraceOn", StringComparison.Ordinal));
 
             if (traceOnAttribute != null)
             {
