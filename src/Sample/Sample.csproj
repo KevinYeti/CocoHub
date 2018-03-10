@@ -6,9 +6,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Cocohub.Tracer.Fody" Version="2.0.0.20" />
+    <PackageReference Include="Cocohub.Tracer.Fody" Version="2.0.0.24" />
     <PackageReference Include="Fody" Version="2.3.20" />
-    <PackageReference Include="Tracer.Cocohub" Version="1.2.0.20" />
+    <PackageReference Include="Tracer.Cocohub" Version="1.2.0.24" />
   </ItemGroup>
 
 </Project>

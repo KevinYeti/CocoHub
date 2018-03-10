@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Tracer.Cocohub.Middleware;
 using Tracer.Cocohub.Service;
+using TracerAttributes;
 
 namespace ApiSample
 {
@@ -17,6 +18,7 @@ namespace ApiSample
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
+        [NoTrace]
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddCocohub();

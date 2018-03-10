@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Tracer.Cocohub
+namespace TracerAttributes
 {
     [AttributeUsage(AttributeTargets.Class|AttributeTargets.Method, AllowMultiple = true, Inherited = true)]
     public class TraceOn : Attribute
