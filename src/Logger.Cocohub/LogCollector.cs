@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Logger.Cocohub
 {
@@ -28,11 +29,18 @@ namespace Logger.Cocohub
 
             string[] result = new String[count];
             string take;
-            for (int i = 0; i < count; i++)
-            {
+
+            //Parallel version
+            Parallel.For(0, count, (i) => {
                 _collector.TryTake(out take);
                 result[i] = take;
-            }
+            });
+
+            //for (int i = 0; i < count; i++)
+            //{
+            //    _collector.TryTake(out take);
+            //    result[i] = take;
+            //}
 
             return result;
         }

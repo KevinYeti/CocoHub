@@ -17,6 +17,7 @@ namespace Logger.Cocohub
                 _thread = new Thread( new ThreadStart(CoreThread.CoreFunc));
                 _thread.IsBackground = true;
                 _thread.Start();
+                Console.WriteLine("Logger.Cocohub started.");
             }
         }
     }
