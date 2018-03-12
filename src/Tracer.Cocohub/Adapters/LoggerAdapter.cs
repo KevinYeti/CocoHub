@@ -30,7 +30,8 @@ namespace Tracer.Cocohub.Adapters
                 StringBuilder parameters = new StringBuilder();
                 for (int i = 0; i < paramNames.Length; i++)
                 {
-                    parameters.AppendFormat("{0}={1}", paramNames[i], paramValues[i] ?? NullString);
+                    parameters.AppendFormat("{0}={1}", paramNames[i], 
+                        paramValues[i].ToString().Replace("\r\n", string.Empty).Replace("\"", string.Empty) ?? NullString);
                     if (i < paramNames.Length - 1) parameters.Append(", ");
                 }
                 argInfo = parameters.ToString();

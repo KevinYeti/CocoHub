@@ -30,17 +30,18 @@ namespace Logger.Cocohub
             string[] result = new String[count];
             string take;
 
-            //Parallel version
-            Parallel.For(0, count, (i) => {
-                _collector.TryTake(out take);
-                result[i] = take;
-            });
-
-            //for (int i = 0; i < count; i++)
-            //{
+            ////Parallel version
+            //Parallel.For(0, count, (i) => {
             //    _collector.TryTake(out take);
-            //    result[i] = take;
-            //}
+            //    result[i] = take.Replace("\r\n", string.Empty);
+            //});
+
+            //normal version
+            for (int i = 0; i < count; i++)
+            {
+                _collector.TryTake(out take);
+                result[i] = take.Replace("\r\n", string.Empty);
+            }
 
             return result;
         }
