@@ -31,7 +31,7 @@ namespace Tracer.Cocohub.Adapters
                 for (int i = 0; i < paramNames.Length; i++)
                 {
                     parameters.AppendFormat("{0}={1}", paramNames[i], 
-                        paramValues[i].ToString().Replace("\r\n", string.Empty).Replace("\"", string.Empty) ?? NullString);
+                        paramValues[i] == null ? NullString : paramValues[i].ToString().Replace("\r\n", string.Empty).Replace("\"", string.Empty));
                     if (i < paramNames.Length - 1) parameters.Append(", ");
                 }
                 argInfo = parameters.ToString();
@@ -58,7 +58,7 @@ namespace Tracer.Cocohub.Adapters
                 for (int i = 0; i < paramNames.Length; i++)
                 {
                     parameters.AppendFormat("{0}={1}", paramNames[i] ?? "$return", 
-                        paramValues[i].ToString().Replace("\r\n", string.Empty).Replace("\"", string.Empty) ?? NullString);
+                        paramValues[i] == null ? NullString : paramValues[i].ToString().Replace("\r\n", string.Empty).Replace("\"", string.Empty));
                     if (i < paramNames.Length - 1) parameters.Append(", ");
                 }
                 returnValue = parameters.ToString();
