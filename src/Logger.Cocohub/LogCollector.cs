@@ -34,7 +34,7 @@ namespace Logger.Cocohub
             for (int i = 0; i < count; i++)
             {
                 _collector.TryTake(out take);
-                result[i] = take;
+                result[i] = take.Replace("\r", string.Empty).Replace("\n", string.Empty);
             }
 
             return result;

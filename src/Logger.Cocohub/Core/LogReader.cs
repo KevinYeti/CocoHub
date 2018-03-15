@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -23,15 +24,16 @@ namespace Logger.Cocohub.Core
             else
             {
                 SortedSet<string> set = new SortedSet<string>(files);
-                return set.Max;
+                return set.Min;
             }
         }
 
-        //public static string[] Fetch()
-        //{
-            
-        //}
+        public static string[] Fetch()
+        {
+            List<string> logs = new List<string>();
 
 
+            return logs.ToArray();
+        }
     }
 }

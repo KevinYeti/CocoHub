@@ -7,11 +7,12 @@ namespace Agent.Cocohub
 {
     public static class Startup
     {
-        private static Thread _thread;
+        private static Thread _threadFetch;
+        private static Thread _threadWriteDB;
 
         public static void StartWatch()
         {
-            if (_thread != null)
+            if (_threadFetch != null || _threadWriteDB != null)
             {
                 Console.WriteLine("Agent.Cocohub has already started.");
                 return;
@@ -22,20 +23,22 @@ namespace Agent.Cocohub
 
         public static void Stop()
         {
-            if (_thread != null)
-            {
-                Console.WriteLine("Agent.Cocohub stopping.");
-                AgentThread._running = false;
-            }
-            Console.WriteLine("Agent.Cocohub stopped.");
+            Console.WriteLine("Agent.Cocohub stopping.");
+            AgentThread._running = false;
         }
 
         private static void internalStart()
         {
-            _thread = new Thread(new ThreadStart(AgentThread.CoreFunc));
-            _thread.IsBackground = true;
             AgentThread._running = true;
-            _thread.Start();
+
+            _threadFetch = new Thread(new ThreadStart(AgentThread.CoreFetch));
+            _threadFetch.IsBackground = true;
+            _threadFetch.Start();
+
+            _threadWriteDB = new Thread(new ThreadStart(AgentThread.CoreWrite));
+            _threadWriteDB.IsBackground = true;
+            _threadWriteDB.Start();
+
             Console.WriteLine("Agent.Cocohub started.");
         }
     }

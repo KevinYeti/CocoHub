@@ -60,13 +60,13 @@ namespace ApiSample.Controllers
 
         // POST api/values
         [HttpPost]
-        public void Post([FromBody]string value)
+        public void Post([FromBody]dynamic value)
         {
         }
 
-        // PUT api/values/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody]string value)
+        // PUT api/values
+        [HttpPut]
+        public void Password([FromBody]dynamic json)
         {
         }
 
