@@ -13,9 +13,8 @@ namespace MultiTree.Cocohub
             Root = new Node(1) { Parent = null };
         }
 
-        public bool TryPeek(string span, out Node node)
+        public bool TryLink(string span, long time, string name, string parms)
         {
-            node = null;
             var spans = span.Split(new string[] {"."}, StringSplitOptions.RemoveEmptyEntries);
             if (string.IsNullOrEmpty(span) || spans.Length == 0 || spans.Length == 1)
                 return false;
@@ -26,9 +25,12 @@ namespace MultiTree.Cocohub
                 else
                 {
                     //0.1
-                    node = Root;
-                    return true;  
-                }              
+                    Root.Name = name;
+                    Root.Time = time;
+                    Root.Params = parms;
+
+                    return true;
+                }
             }
             else
             {
@@ -36,7 +38,29 @@ namespace MultiTree.Cocohub
                 Node nParent = Root;
                 for (int i = 2; i < spans.Length; i++)
                 {
-                    
+                    int index = Convert.ToInt32(spans[i]);
+                    var node = nParent.Children.Find(n => n.Index == index);
+                    if (node == null)
+                    {
+                        //found nothing, need create first
+                        node = new Node(index);
+                        nParent.Children.Add(node);
+                    }
+
+                    if (i == spans.Length - 1)
+                    {
+                        //last one, the exact one we want
+                        node.Name = name;
+                        node.Time = time;
+                        node.Params = parms;
+
+                        return true;
+                    }
+                    else
+                    {
+                        nParent = node;
+                        continue;
+                    }
                 }
             }
 
