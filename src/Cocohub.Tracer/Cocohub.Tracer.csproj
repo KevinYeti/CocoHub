@@ -6,9 +6,9 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageTags>Tracer, ILWeaving, Fody, Cecil, AOP</PackageTags>
     <PackageId>Cocohub.Tracer.Fody</PackageId>
-    <AssemblyVersion>2.0.0.32</AssemblyVersion>
-    <FileVersion>2.0.0.32</FileVersion>
-    <Version>2.0.0.32</Version>
+    <AssemblyVersion>2.0.0.33</AssemblyVersion>
+    <FileVersion>2.0.0.33</FileVersion>
+    <Version>2.0.0.33</Version>
     <PackageLicenseUrl>http://www.opensource.org/licenses/mit-license.php</PackageLicenseUrl>
   </PropertyGroup>
 

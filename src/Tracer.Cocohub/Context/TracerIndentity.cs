@@ -93,8 +93,15 @@ namespace Tracer.Cocohub.Context
 
         public void Leave()
         {
-            _lastSpanId = _spanId;
-            _spanId = _spanId.Substring(0, _spanId.LastIndexOf("."));
+            try
+            {
+                _lastSpanId = _spanId;
+                _spanId = _spanId.Substring(0, _spanId.LastIndexOf("."));
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine("Unexpected exception:" + ex.Message);
+            }
         }
 
         public string EnterAsync()

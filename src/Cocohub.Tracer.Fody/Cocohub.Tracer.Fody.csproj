@@ -9,9 +9,9 @@
     <Authors>clawit</Authors>
     <Copyright></Copyright>
     <PackageTags>Tracer, ILWeaving, Fody, Cecil, AOP</PackageTags>
-    <AssemblyVersion>2.0.0.32</AssemblyVersion>
-    <FileVersion>1.0.0.32</FileVersion>
-    <Version>2.0.0.32</Version>
+    <AssemblyVersion>2.0.0.33</AssemblyVersion>
+    <FileVersion>1.0.0.33</FileVersion>
+    <Version>2.0.0.33</Version>
   </PropertyGroup>
 
   <ItemGroup>
