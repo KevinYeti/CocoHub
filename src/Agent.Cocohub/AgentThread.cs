@@ -32,7 +32,7 @@ namespace Agent.Cocohub
         {
             while (_running || _logs.Count > 0)
             {
-
+                
                 Thread.Sleep(1000);
             }
             Console.WriteLine("Agent.Cocohub stopped.");

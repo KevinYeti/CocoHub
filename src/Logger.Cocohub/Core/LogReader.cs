@@ -31,19 +31,41 @@ namespace Logger.Cocohub.Core
 
         public static string[] Fetch()
         {
-            List<string> logs = new List<string>();
             int num = 0;
             var path = getLogPath(ref num);
 
-            if (num == 1)
+            if (num <= 0)
+                return null;
+            else if (num == 1)
+                return ReadLines(path, ref _pos);
+            else    //num >= 2
             {
+                List<string> logs = new List<string>();
 
-            }
-            if (num > 1 && _file != path)
-            {
-                File.ReadAllLines(path);
-            }
+                //finish reading 1st file (from last read)
+                logs.AddRange(ReadLines(path, ref _pos));
+                File.Move(path, path.Replace(".log", ".nut"));
 
+                //finish reading 2nd~(num-1)th file
+                while (num > 2)
+                {
+                    path = getLogPath(ref num);
+                    logs.AddRange(File.ReadLines(path));
+                    File.Move(path, path.Replace(".log", ".nut"));
+                }
+
+                //keep reading (num)th file (from start)
+                path = getLogPath(ref num);
+                _pos = 0;
+                logs.AddRange(ReadLines(path, ref _pos));
+
+                return logs.ToArray();
+            }
+        }
+
+        private static string[] ReadLines(string path, ref long pos)
+        {
+            string lines = string.Empty;
             FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read);
             byte[] content = new byte[fs.Length];
             if (fs.CanRead)
@@ -51,20 +73,22 @@ namespace Logger.Cocohub.Core
                 StreamReader sr = new StreamReader(fs);
                 long dataLengthToRead = fs.Length;//获取新的文件总大小
 
-                if (dataLengthToRead > 0 && dataLengthToRead > _pos)
+                if (dataLengthToRead > 0 && dataLengthToRead > pos)
                 {
-                    fs.Seek(_pos, SeekOrigin.Begin);
-                    int lengthRead = fs.Read(content, 0, Convert.ToInt32(dataLengthToRead - _pos));//读取的大小
-                    var lines = Encoding.Default.GetString(content);//载入文本
-                    _pos = dataLengthToRead;
+                    fs.Seek(pos, SeekOrigin.Begin);
+                    int lengthRead = fs.Read(content, 0, Convert.ToInt32(dataLengthToRead - pos));//读取的大小
+                    lines = Encoding.Default.GetString(content);//载入文本
+                    pos = dataLengthToRead;
                 }
 
                 sr.Close();
                 fs.Close();
             }
-            
 
-            return logs.ToArray();
+            if (string.IsNullOrEmpty(lines))
+                return null;
+            else
+                return lines.Split(new string[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
         }
     }
 }
