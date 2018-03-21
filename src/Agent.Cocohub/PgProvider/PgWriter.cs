@@ -8,23 +8,26 @@ namespace Agent.Cocohub.PgProvider
 {
     public static class PgWriter
     {
+        private static PostgreSQLCopyHelper<LogEntity> _copyHelper = null;
         static PgWriter()
         {
-            var copyHelper = new PostgreSQLCopyHelper<LogEntity>("sample", "unit_test")
+            _copyHelper = new PostgreSQLCopyHelper<LogEntity>("public", "Log")
+                .MapTimeStamp("LogTime", x => x.LogTime)
+                .MapText("Level", x => x.Level)
                 .MapText("Method", x => x.Method)
-                .MapText("Params", x => x.Params)
                 .MapText("Action", x => x.Action)
+                .MapText("Params", x => x.Params)
                 .MapInteger("Time", x => x.Time)
-                .MapDate("LogTime", x => x.LogTime);
+                .MapText("SpanId", x => x.SpanId)
+                .MapText("TraceId", x => x.TraceId);
         }
 
-        public static void WriteToDatabase(PostgreSQLCopyHelper<LogEntity> copyHelper, IEnumerable<LogEntity> entities)
+        public static void WriteToDatabase(IEnumerable<LogEntity> entities)
         {
-            using (var connection = new NpgsqlConnection("Server=127.0.0.1;Port=5432;Database=sampledb;User Id=philipp;Password=test_pwd;"))
+            using (var connection = new NpgsqlConnection("Server=10.99.66.86;Port=5432;Database=postgres;User Id=postgres;Password=123456;"))
             {
                 connection.Open();
-
-                copyHelper.SaveAll(connection, entities);
+                _copyHelper.SaveAll(connection, entities);
             }
         }
     }

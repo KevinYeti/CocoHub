@@ -8,5 +8,9 @@ namespace Agent.Cocohub.Entity
         public string Action { get; set; }
         public int Time { get; set; }
         public DateTime LogTime { get; set; }
+        public string Level { get; set; }
+        public string SpanId { get; set; }
+        public string TraceId { get; set; }
+
     }
 }

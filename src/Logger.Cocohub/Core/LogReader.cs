@@ -8,7 +8,6 @@ namespace Logger.Cocohub.Core
 {
     public static class LogReader
     {
-        private static string _file;
         private static long _pos = 0;
         private static string _directory = "log";
 
@@ -43,8 +42,11 @@ namespace Logger.Cocohub.Core
                 List<string> logs = new List<string>();
 
                 //finish reading 1st file (from last read)
-                logs.AddRange(ReadLines(path, ref _pos));
+                var lines = ReadLines(path, ref _pos);
+                if (lines != null && lines.Length > 0)
+                    logs.AddRange(lines);
                 File.Move(path, path.Replace(".log", ".nut"));
+                lines = null;
 
                 //finish reading 2nd~(num-1)th file
                 while (num > 2)
@@ -57,7 +59,9 @@ namespace Logger.Cocohub.Core
                 //keep reading (num)th file (from start)
                 path = getLogPath(ref num);
                 _pos = 0;
-                logs.AddRange(ReadLines(path, ref _pos));
+                lines = ReadLines(path, ref _pos);
+                if (lines != null && lines.Length > 0)
+                    logs.AddRange(lines);
 
                 return logs.ToArray();
             }
@@ -67,11 +71,11 @@ namespace Logger.Cocohub.Core
         {
             string lines = string.Empty;
             FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read);
-            byte[] content = new byte[fs.Length];
             if (fs.CanRead)
             {
                 StreamReader sr = new StreamReader(fs);
                 long dataLengthToRead = fs.Length;//获取新的文件总大小
+                byte[] content = new byte[dataLengthToRead - pos];
 
                 if (dataLengthToRead > 0 && dataLengthToRead > pos)
                 {
