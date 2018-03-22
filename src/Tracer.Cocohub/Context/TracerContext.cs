@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Primitives;
+using System.Linq;
 
 namespace Tracer.Cocohub.Context
 {
@@ -27,14 +28,26 @@ namespace Tracer.Cocohub.Context
         public static string IP {
             get {
                 string _ip = "0.0.0.0";
-                if ( _contextAccessor != null 
-                    && _contextAccessor.HttpContext != null 
-                    && _contextAccessor.HttpContext.Request != null 
-                    && _contextAccessor.HttpContext.Request.Headers != null
-                    && _contextAccessor.HttpContext.Request.Headers.Count > 0
-                    && _contextAccessor.HttpContext.Request.Headers["X-Forwarded-For"].Count > 0 )
+                if (_contextAccessor != null && _contextAccessor.HttpContext != null)
                 {
-                    _ip = _contextAccessor.HttpContext.Request.Headers["X-Forwarded-For"].ToString();
+                    string ip = string.Empty;
+                    //NLB
+                    if (_contextAccessor.HttpContext.Request != null
+                        && _contextAccessor.HttpContext.Request.Headers != null
+                        && _contextAccessor.HttpContext.Request.Headers.Count > 0)
+                    {
+                        ip = _contextAccessor.HttpContext.Request.Headers["X-Forwarded-For"].FirstOrDefault();
+                    }
+                    //normal network
+                    if (string.IsNullOrEmpty(ip) 
+                        && _contextAccessor.HttpContext.Connection != null
+                        && _contextAccessor.HttpContext.Connection.RemoteIpAddress != null)
+                    {
+                        ip = _contextAccessor.HttpContext.Connection.RemoteIpAddress.ToString();
+                    }
+
+                    if (!string.IsNullOrEmpty(ip))
+                        _ip = ip;
                 }
 
                 return _ip;

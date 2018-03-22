@@ -19,7 +19,10 @@ namespace Agent.Cocohub.PgProvider
                 .MapText("Params", x => x.Params)
                 .MapInteger("Time", x => x.Time)
                 .MapText("SpanId", x => x.SpanId)
-                .MapText("TraceId", x => x.TraceId);
+                .MapText("TraceId", x => x.TraceId)
+                .MapBit("HasException", x => x.HasException)
+                .MapText("Result", x => x.Result)
+                .MapText("IP", x => x.IP);
         }
 
         public static void WriteToDatabase(IEnumerable<LogEntity> entities)
