@@ -11,6 +11,9 @@ namespace Agent.Cocohub.Entity
         public string Level { get; set; }
         public string SpanId { get; set; }
         public string TraceId { get; set; }
+        public bool HasException { get; set; }
+        public string Result { get; set; }
+        public string IP { get; set; }
 
     }
 }

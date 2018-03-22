@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Primitives;
 
 namespace Tracer.Cocohub.Context
 {
@@ -21,6 +22,23 @@ namespace Tracer.Cocohub.Context
         internal static void Configure(IHttpContextAccessor contextAccessor)
         {
             _contextAccessor = contextAccessor;
+        }
+
+        public static string IP {
+            get {
+                string _ip = "0.0.0.0";
+                if ( _contextAccessor != null 
+                    && _contextAccessor.HttpContext != null 
+                    && _contextAccessor.HttpContext.Request != null 
+                    && _contextAccessor.HttpContext.Request.Headers != null
+                    && _contextAccessor.HttpContext.Request.Headers.Count > 0
+                    && _contextAccessor.HttpContext.Request.Headers["X-Forwarded-For"].Count > 0 )
+                {
+                    _ip = _contextAccessor.HttpContext.Request.Headers["X-Forwarded-For"].ToString();
+                }
+
+                return _ip;
+            }
         }
 
         public static TracerIndentity Tracer

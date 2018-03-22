@@ -12,7 +12,7 @@ namespace Tracer.Cocohub.Adapters
         private readonly Type _type;
         private static string _textEnter = "{{\"Action\":\"Enter\",\"Method\":\"{0}\",\"Params\":\"{1}\"}}";
         private static string _textReturn = "{{\"Action\":\"Return\",\"Method\":\"{0}\",\"Result\":\"{1}\",\"Time\":{2}}}";
-        private static string _textEnterWithTracer = "{{\"Action\":\"Enter\",\"Method\":\"{0}\",\"Params\":\"{1}\",\"TracerId\":\"{2}\",\"SpanId\":\"{3}\"}}";
+        private static string _textEnterWithTracer = "{{\"Action\":\"Enter\",\"Method\":\"{0}\",\"Params\":\"{1}\",\"TracerId\":\"{2}\",\"SpanId\":\"{3}\",\"Ip\":\"{4}\"}}";
         private static string _textReturnWithTracer = "{{\"Action\":\"Return\",\"Method\":\"{0}\",\"Result\":\"{1}\",\"Time\":{2},\"TracerId\":\"{3}\",\"SpanId\":\"{4}\"}}";
 
         public LoggerAdapter(Type type)
@@ -42,7 +42,7 @@ namespace Tracer.Cocohub.Adapters
             if (TracerContext.Tracer == null)
                 message = String.Format(_textEnter, methodInfo, argInfo);
             else
-                message = String.Format(_textEnterWithTracer, methodInfo, argInfo, TracerContext.Tracer.TracerId, TracerContext.Tracer.SpanId);
+                message = String.Format(_textEnterWithTracer, methodInfo, argInfo, TracerContext.Tracer.TracerId, TracerContext.Tracer.SpanId, TracerContext.IP);
 
             Log.Info(message);
         }
