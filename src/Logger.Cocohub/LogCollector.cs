@@ -54,7 +54,7 @@ namespace Logger.Cocohub
             Parallel.For(0, count, (i) => {
                 if (_collector.TryTake(out string take) && !string.IsNullOrEmpty(take))
                 {
-                    result += take.Replace("\r", string.Empty).Replace("\n", string.Empty) + "\r\n";
+                    result += take.Replace("\r", string.Empty).Replace("\n", string.Empty) + Environment.NewLine;
                 }
             });
 

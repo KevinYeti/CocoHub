@@ -92,7 +92,7 @@ namespace Logger.Cocohub.Core
             if (string.IsNullOrEmpty(lines))
                 return null;
             else
-                return lines.Split(new string[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
+                return lines.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
         }
     }
 }
