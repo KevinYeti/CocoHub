@@ -34,13 +34,13 @@ namespace Logger.Cocohub.Core
         }
 
 
-        public static void Flush(string[] logs)
+        public static void Flush(string logs)
         {
             if (logs == null || logs.Length == 0)
                 return;
 
             var path = getLogPath();
-            File.AppendAllLines(path, logs);
+            File.AppendAllText(path, logs);
 
         }
     }

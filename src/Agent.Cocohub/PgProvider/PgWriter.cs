@@ -11,22 +11,25 @@ namespace Agent.Cocohub.PgProvider
         private static PostgreSQLCopyHelper<LogEntity> _copyHelper = null;
         static PgWriter()
         {
-            _copyHelper = new PostgreSQLCopyHelper<LogEntity>("public", "Log")
-                .MapTimeStamp("LogTime", x => x.LogTime)
-                .MapText("Level", x => x.Level)
-                .MapText("Method", x => x.Method)
-                .MapText("Action", x => x.Action)
-                .MapText("Params", x => x.Params)
-                .MapInteger("Time", x => x.Time)
-                .MapText("SpanId", x => x.SpanId)
-                .MapText("TraceId", x => x.TraceId)
-                .MapBit("HasException", x => x.HasException)
-                .MapText("Result", x => x.Result)
-                .MapText("IP", x => x.IP);
+            _copyHelper = new PostgreSQLCopyHelper<LogEntity>("public", "log")
+                .MapTimeStamp("logtime", x => x.LogTime)
+                .MapText("level", x => x.Level)
+                .MapText("method", x => x.Method)
+                .MapText("action", x => x.Action)
+                .MapText("params", x => x.Params)
+                .MapNumeric("time", x => x.Time)
+                .MapText("spanid", x => x.SpanId)
+                .MapText("tracerid", x => x.TracerId)
+                .MapBit("hasexception", x => x.HasException)
+                .MapText("result", x => x.Result)
+                .MapText("ip", x => x.IP);
         }
 
-        public static void WriteToDatabase(IEnumerable<LogEntity> entities)
+        public static void Write2Db(IEnumerable<LogEntity> entities)
         {
+            if (entities == null)
+                return;
+
             using (var connection = new NpgsqlConnection("Server=10.99.66.86;Port=5432;Database=postgres;User Id=postgres;Password=123456;"))
             {
                 connection.Open();
