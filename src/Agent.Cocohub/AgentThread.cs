@@ -40,6 +40,7 @@ namespace Agent.Cocohub
                 catch(Exception ex) 
                 {
                     Console.WriteLine("Log agent error:CoreFetch. " + ex.Message);
+                    Console.WriteLine(ex.StackTrace);
                     Thread.Sleep(10000);
                 }
             }
@@ -67,7 +68,8 @@ namespace Agent.Cocohub
                         }
                     });
 
-                    _write(entities);
+                    if (entities.Count > 0)
+                        _write(entities);
 
                     if (loop > 1000)
                         Thread.Sleep(100);
@@ -77,6 +79,7 @@ namespace Agent.Cocohub
                 catch (Exception ex)
                 {
                     Console.WriteLine("Log agent error:CoreWrite. " + ex.Message);
+                    Console.WriteLine(ex.StackTrace);
                     Thread.Sleep(10000);
                 }
             }
