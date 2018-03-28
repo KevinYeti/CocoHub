@@ -57,7 +57,7 @@ namespace Agent.Cocohub
                         Thread.Sleep(3000);
                         continue;
                     }
-                    Console.WriteLine(loop.ToString() + " lines fetched.");
+                    //Console.WriteLine(loop.ToString() + " lines fetched.");
                     List<LogEntity> entities = new List<LogEntity>();
                     Parallel.For(0, loop, (i) => {
                         if (_logs.TryTake(out var log) && !string.IsNullOrEmpty(log))

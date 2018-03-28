@@ -34,6 +34,7 @@ namespace Agent.Cocohub
         {
             Console.WriteLine("Agent.Cocohub stopping.");
             AgentThread._running = false;
+            _threadWriteDB.Join();
         }
 
         private static void internalStart()
