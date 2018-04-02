@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Primitives;
+using System;
 using System.Linq;
 
 namespace Tracer.Cocohub.Context
@@ -14,7 +15,11 @@ namespace Tracer.Cocohub.Context
         public static HttpContext CurrentHttpContext {
             get {
                 if (_contextAccessor == null)
+                {
+                    Console.WriteLine("Warning: CurrentHttpContext is null, this maybe cased by context accessor is null.");
                     return null;
+                }
+                    
                 else
                     return _contextAccessor.HttpContext;
             }
