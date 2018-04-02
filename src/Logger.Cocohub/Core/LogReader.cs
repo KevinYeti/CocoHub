@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Text;
 
@@ -70,29 +71,41 @@ namespace Logger.Cocohub.Core
         private static string[] ReadLines(string path, ref long pos)
         {
             string lines = string.Empty;
-            FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read);
-            if (fs.CanRead)
-            {
-                StreamReader sr = new StreamReader(fs);
-                long dataLengthToRead = fs.Length;//获取新的文件总大小
-                byte[] content = new byte[dataLengthToRead - pos];
+            if (!File.Exists(path))
+                return null;
 
-                if (dataLengthToRead > 0 && dataLengthToRead > pos)
+            try
+            {
+                FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read);
+                if (fs.CanRead)
                 {
-                    fs.Seek(pos, SeekOrigin.Begin);
-                    int lengthRead = fs.Read(content, 0, Convert.ToInt32(dataLengthToRead - pos));//读取的大小
-                    lines = Encoding.Default.GetString(content);//载入文本
-                    pos = dataLengthToRead;
+                    StreamReader sr = new StreamReader(fs);
+                    long dataLengthToRead = fs.Length;//获取新的文件总大小
+                    byte[] content = new byte[dataLengthToRead - pos];
+
+                    if (dataLengthToRead > 0 && dataLengthToRead > pos)
+                    {
+                        fs.Seek(pos, SeekOrigin.Begin);
+                        int lengthRead = fs.Read(content, 0, Convert.ToInt32(dataLengthToRead - pos));//读取的大小
+                        lines = Encoding.Default.GetString(content);//载入文本
+                        pos = dataLengthToRead;
+                    }
+
+                    sr.Close();
+                    fs.Close();
                 }
 
-                sr.Close();
-                fs.Close();
+                if (string.IsNullOrEmpty(lines))
+                    return null;
+                else
+                    return lines.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
             }
-
-            if (string.IsNullOrEmpty(lines))
+            catch (Exception ex)
+            {
+                Debug.WriteLine("ReadLines error: " + ex.Message);
+                Debug.WriteLine(ex.StackTrace);
                 return null;
-            else
-                return lines.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+            }
         }
     }
 }
