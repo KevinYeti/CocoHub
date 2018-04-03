@@ -20,26 +20,6 @@ namespace Logger.Cocohub
             return _collector.Count;
         }
 
-        //public static string[] Fetch()
-        //{
-        //    //
-        //    int count = _collector.Count;
-        //    if (count == 0)
-        //        return null;
-
-        //    string[] result = new String[count];
-        //    string take;
-
-        //    //DO NOT try to use parallel here 
-        //    for (int i = 0; i < count; i++)
-        //    {
-        //        _collector.TryTake(out take);
-        //        result[i] = take.Replace("\r", string.Empty).Replace("\n", string.Empty);
-        //    }
-
-        //    return result;
-        //}
-
         public static string Fetch()
         {
             //
@@ -51,14 +31,38 @@ namespace Logger.Cocohub
 
             string result = string.Empty;
 
-            Parallel.For(0, count, (i) => {
+            //DO NOT try to use parallel here 
+            for (int i = 0; i < count; i++)
+            {
                 if (_collector.TryTake(out string take) && !string.IsNullOrEmpty(take))
                 {
                     result += take.Replace("\r", string.Empty).Replace("\n", string.Empty) + Environment.NewLine;
                 }
-            });
+            }
 
             return result;
         }
+
+        //public static string Fetch()
+        //{
+        //    //
+        //    int count = _collector.Count;
+        //    if (count == 0)
+        //        return null;
+        //    else if (count > 1000)
+        //        count = 1000;
+
+        //    string result = string.Empty;
+
+        //    Parallel.For(0, count, (i) =>
+        //    {
+        //        if (_collector.TryTake(out string take) && !string.IsNullOrEmpty(take))
+        //        {
+        //            result += take.Replace("\r", string.Empty).Replace("\n", string.Empty) + Environment.NewLine;
+        //        }
+        //    });
+
+        //    return result;
+        //}
     }
 }
