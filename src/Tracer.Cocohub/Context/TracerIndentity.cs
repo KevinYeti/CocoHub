@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace Tracer.Cocohub.Context
@@ -9,23 +10,11 @@ namespace Tracer.Cocohub.Context
         public static TracerIndentity Create()
         {
             var tracer = new TracerIndentity();
-            tracer._tracerId = Guid.NewGuid().ToString("N");
-            tracer._spanId = "0";
-            TracerIndentity._tracer = tracer;
+            //generate a tracerid
+            //guid(length:32) + random(length:8)
+            tracer._tracerId = Guid.NewGuid().ToString("N") + Rnd(10000000, 99999999).ToString();
 
-            return tracer;
-        }
-
-        public static TracerIndentity Create(string tracerId)
-        {
-            var tracer = new TracerIndentity();
-            Guid _tracerId;
-            if (Guid.TryParse(tracerId, out _tracerId))
-                tracer._tracerId = _tracerId.ToString("N");
-            else
-                tracer._tracerId = Guid.NewGuid().ToString("N");
             tracer._spanId = "0";
-            TracerIndentity._tracer = tracer;
 
             return tracer;
         }
@@ -33,13 +22,10 @@ namespace Tracer.Cocohub.Context
         private static TracerIndentity Create(string tracerId, string spanId)
         {
             var tracer = new TracerIndentity();
-            Guid _tracerId;
-            if (Guid.TryParse(tracerId, out _tracerId))
-                tracer._tracerId = _tracerId.ToString("N");
-            else
-                tracer._tracerId = Guid.NewGuid().ToString("N");
+
+            tracer._tracerId = tracerId;
+ 
             tracer._spanId = spanId;
-            TracerIndentity._tracer = tracer;
 
             return tracer;
         }
@@ -56,9 +42,6 @@ namespace Tracer.Cocohub.Context
             else
                 return null;
         }
-
-        private static TracerIndentity _tracer = null;
-        public static TracerIndentity Current { get { return _tracer; } }
 
         private TracerIndentity() { }
 
@@ -137,6 +120,14 @@ namespace Tracer.Cocohub.Context
         private string _spanId = string.Empty;
         public string SpanId { get { return _spanId; } }
 
-
+        private static int Rnd(int MinValue, int MaxValue)
+        {
+            byte[] array = new byte[1];
+            RNGCryptoServiceProvider rNGCryptoServiceProvider = new RNGCryptoServiceProvider();
+            rNGCryptoServiceProvider.GetNonZeroBytes(array);
+            int num = Convert.ToInt32(array[0]);
+            System.Random random = new System.Random(DateTime.Now.Millisecond * num);
+            return random.Next(MinValue, MaxValue);
+        }
     }
 }

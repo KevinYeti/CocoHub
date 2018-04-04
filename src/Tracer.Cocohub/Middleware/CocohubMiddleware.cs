@@ -19,6 +19,7 @@ namespace Tracer.Cocohub.Middleware
         {
             try
             {
+                TracerIndentity _tracer = null;
                 //init tracer in context 
                 if (!context.Items.ContainsKey(TracerContext._tracer)
                     && !context.Items.ContainsKey(TracerContext._tracerRpc))
@@ -27,28 +28,29 @@ namespace Tracer.Cocohub.Middleware
                     if (context.Request.Headers.Keys.Contains(TracerContext._tracer))
                     {
                         var tracer = context.Request.Headers[TracerContext._tracer].ToString();
-
-                        context.Items.Add(TracerContext._tracer, TracerIndentity.FromString(tracer));
+                        _tracer = TracerIndentity.FromString(tracer);
+                        context.Items.Add(TracerContext._tracer, _tracer);
                     }
                     else if (context.Request.Headers.Keys.Contains(TracerContext._tracerRpc))
                     {
                         //request from RPC 
                         var tracerRpc = context.Request.Headers[TracerContext._tracerRpc].ToString();
-
-                        context.Items.Add(TracerContext._tracerRpc, TracerIndentity.FromString(tracerRpc));
+                        _tracer = TracerIndentity.FromString(tracerRpc);
+                        context.Items.Add(TracerContext._tracerRpc, _tracer);
                     }
                     else
                     {
                         //new request, new context 
-                        context.Items.Add(TracerContext._tracer, TracerIndentity.Create());
+                        _tracer = TracerIndentity.Create();
+                        context.Items.Add(TracerContext._tracer, _tracer);
                     }
                 }
 
                 //add tracerId to response header for return
                 if (!context.Response.Headers.ContainsKey(TracerContext._tracer)
-                    && TracerIndentity.Current != null)
+                    && _tracer != null)
                 {
-                    context.Response.Headers.Add(TracerContext._tracer, TracerIndentity.Current.ToString());
+                    context.Response.Headers.Add(TracerContext._tracer, _tracer.ToString());
                 }
             }
             catch (Exception ex)

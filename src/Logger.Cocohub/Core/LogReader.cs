@@ -10,6 +10,7 @@ namespace Logger.Cocohub.Core
     public static class LogReader
     {
         private static long _pos = 0;
+        private static string _file = string.Empty;
         private static string _directory = "log";
 
         private static string getLogPath(ref int num)
@@ -33,6 +34,13 @@ namespace Logger.Cocohub.Core
         {
             int num = 0;
             var path = getLogPath(ref num);
+
+            //try to remember the latest filename, and reset the pos when filename changed.
+            if (_file != path)
+            {
+                _pos = 0;
+                _file = path;
+            }
 
             if (num <= 0)
                 return null;
@@ -102,8 +110,8 @@ namespace Logger.Cocohub.Core
             }
             catch (Exception ex)
             {
-                Debug.WriteLine("ReadLines error: " + ex.Message);
-                Debug.WriteLine(ex.StackTrace);
+                Console.WriteLine("ReadLines error: " + ex.Message);
+                Console.WriteLine(ex.StackTrace);
                 return null;
             }
         }

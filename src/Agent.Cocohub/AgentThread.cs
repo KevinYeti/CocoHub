@@ -13,7 +13,7 @@ namespace Agent.Cocohub
     {
         internal static bool _running;
 
-        internal static ConcurrentBag<string> _logs = new ConcurrentBag<string>();
+        internal static ConcurrentQueue<string> _logs = new ConcurrentQueue<string>();
 
         internal static Action<IEnumerable<LogEntity>> _write;
 
@@ -30,7 +30,7 @@ namespace Agent.Cocohub
                         continue;
                     }
 
-                    Parallel.ForEach(logs, (log) => { _logs.Add(log); });
+                    Parallel.ForEach(logs, (log) => { _logs.Enqueue(log); });
 
                     if (logs.Length >= 1000)
                         Thread.Sleep(1000);
@@ -58,15 +58,19 @@ namespace Agent.Cocohub
                         Thread.Sleep(3000);
                         continue;
                     }
-                    //Console.WriteLine(loop.ToString() + " lines fetched.");
                     List<LogEntity> entities = new List<LogEntity>();
-                    Parallel.For(0, loop, (i) => {
-                        if (_logs.TryTake(out var log) && !string.IsNullOrEmpty(log))
+                    for (int i = 0; i < loop; i++)
+                    {
+                        if (_logs.TryDequeue(out var log) && !string.IsNullOrEmpty(log))
                         {
                             if (LogResolver.TryResolve(log, out var entity) && entity != null)
                                 entities.Add(entity);
+                            else
+                                Console.WriteLine("TryResolve error:" + log);
                         }
-                    });
+                        else
+                            Console.WriteLine("Dequeue error.");
+                    }
 
                     if (entities.Count > 0)
                         _write(entities);
