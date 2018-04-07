@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Text;
+using System.Threading;
 
 namespace Logger.Cocohub.Core
 {
@@ -45,30 +46,48 @@ namespace Logger.Cocohub.Core
             if (num <= 0)
                 return null;
             else if (num == 1)
-                return ReadLines(path, ref _pos);
+            {
+                var logs = ReadLines(path, ref _pos);
+                System.IO.File.AppendAllText("log/fetch.log", "fetch1:" + path + " pos:" + _pos + Environment.NewLine);
+                System.IO.File.AppendAllText("log/fetch.log", "logs output" + Environment.NewLine);
+                return logs;
+            }
             else    //num >= 2
             {
                 List<string> logs = new List<string>();
 
                 //finish reading 1st file (from last read)
                 var lines = ReadLines(path, ref _pos);
+
+                System.IO.File.AppendAllText("log/fetch.log", "fetch2.1:" + path + " pos:" + _pos + Environment.NewLine);
+                System.IO.File.AppendAllLines("log/fetch.log", lines);
+
                 if (lines != null && lines.Length > 0)
                     logs.AddRange(lines);
-                File.Move(path, path.Replace(".log", ".nut"));
+                Rename(path, path.Replace(".log", ".nut"));
                 lines = null;
 
                 //finish reading 2nd~(num-1)th file
                 while (num > 2)
                 {
                     path = getLogPath(ref num);
-                    logs.AddRange(File.ReadLines(path));
-                    File.Move(path, path.Replace(".log", ".nut"));
+                    var contents = File.ReadLines(path);
+
+                    System.IO.File.AppendAllText("log/fetch.log", "fetch2.2:" + path + " pos:" + _pos + Environment.NewLine);
+                    System.IO.File.AppendAllText("log/fetch.log", "contents output" + Environment.NewLine);
+
+                    logs.AddRange(lines);
+                    Rename(path, path.Replace(".log", ".nut"));
                 }
 
                 //keep reading (num)th file (from start)
                 path = getLogPath(ref num);
                 _pos = 0;
                 lines = ReadLines(path, ref _pos);
+
+                System.IO.File.AppendAllText("log/fetch.log", "fetch2.3:" + path + " pos:" + _pos + Environment.NewLine);
+                System.IO.File.AppendAllText("log/fetch.log", "lines output" + Environment.NewLine);
+
                 if (lines != null && lines.Length > 0)
                     logs.AddRange(lines);
 
@@ -103,6 +122,8 @@ namespace Logger.Cocohub.Core
                     fs.Close();
                 }
 
+                System.IO.File.AppendAllText("log/read.log", lines);
+
                 if (string.IsNullOrEmpty(lines))
                     return null;
                 else
@@ -113,6 +134,22 @@ namespace Logger.Cocohub.Core
                 Console.WriteLine("ReadLines error: " + ex.Message);
                 Console.WriteLine(ex.StackTrace);
                 return null;
+            }
+        }
+
+        private static void Rename(string srcFile, string destFile)
+        {
+            int count = 0;
+            while (!File.Exists(destFile))
+            {
+                if (File.Exists(srcFile) && count < 10 )
+                {
+                    count++;
+                    File.Move(srcFile, destFile);
+                    Thread.Sleep(3000);         //Sleep 3 seconds to ensure success
+                }
+                else
+                    return;
             }
         }
     }
