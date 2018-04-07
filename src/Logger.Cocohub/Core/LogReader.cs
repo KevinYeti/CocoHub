@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Threading;
+using System.Linq;
 
 namespace Logger.Cocohub.Core
 {
@@ -14,27 +15,28 @@ namespace Logger.Cocohub.Core
         private static string _file = string.Empty;
         private static string _directory = "log";
 
-        private static string getLogPath(ref int num)
+        private static SortedSet<string> getLogs()
         {
             if (!Directory.Exists(_directory))
-                return null;
+                return new SortedSet<string>();
 
             //
             var files = Directory.GetFiles(_directory, "cocohub.*.log", SearchOption.AllDirectories);
             if (files == null || files.Length == 0)
-                return null;
+                return new SortedSet<string>();
             else
-            {
-                SortedSet<string> set = new SortedSet<string>(files);
-                num = set.Count;
-                return set.Min;
-            }
+                return new SortedSet<string>(files);
         }
 
         public static string[] Fetch()
         {
-            int num = 0;
-            var path = getLogPath(ref num);
+            var files = getLogs();
+            int num = files.Count;
+
+            if (num <= 0)
+                return null;
+
+            string path = files.Min;
 
             //try to remember the latest filename, and reset the pos when filename changed.
             if (_file != path)
@@ -43,9 +45,7 @@ namespace Logger.Cocohub.Core
                 _file = path;
             }
 
-            if (num <= 0)
-                return null;
-            else if (num == 1)
+            if (num == 1)
             {
                 var logs = ReadLines(path, ref _pos);
                 System.IO.File.AppendAllText("log/fetch.log", "fetch1:" + path + " pos:" + _pos + Environment.NewLine);
@@ -56,7 +56,7 @@ namespace Logger.Cocohub.Core
             {
                 List<string> logs = new List<string>();
 
-                //finish reading 1st file (from last read)
+                //finish reading 1st file (from last read postion & read to EOF)
                 var lines = ReadLines(path, ref _pos);
 
                 System.IO.File.AppendAllText("log/fetch.log", "fetch2.1:" + path + " pos:" + _pos + Environment.NewLine);
@@ -68,20 +68,21 @@ namespace Logger.Cocohub.Core
                 lines = null;
 
                 //finish reading 2nd~(num-1)th file
-                while (num > 2)
+                for (int i = 1; i < num; i++)
                 {
-                    path = getLogPath(ref num);
+                    path = files.ElementAt(i);
                     var contents = File.ReadLines(path);
 
-                    System.IO.File.AppendAllText("log/fetch.log", "fetch2.2:" + path + " pos:" + _pos + Environment.NewLine);
+                    System.IO.File.AppendAllText("log/fetch.log", "fetch2.2." + i.ToString() + ":" + path + " pos:" + _pos + Environment.NewLine);
                     System.IO.File.AppendAllText("log/fetch.log", "contents output" + Environment.NewLine);
 
                     logs.AddRange(lines);
                     Rename(path, path.Replace(".log", ".nut"));
                 }
+                lines = null;
 
                 //keep reading (num)th file (from start)
-                path = getLogPath(ref num);
+                path = files.Max;
                 _pos = 0;
                 lines = ReadLines(path, ref _pos);
 
@@ -139,18 +140,8 @@ namespace Logger.Cocohub.Core
 
         private static void Rename(string srcFile, string destFile)
         {
-            int count = 0;
-            while (!File.Exists(destFile))
-            {
-                if (File.Exists(srcFile) && count < 10 )
-                {
-                    count++;
-                    File.Move(srcFile, destFile);
-                    Thread.Sleep(3000);         //Sleep 3 seconds to ensure success
-                }
-                else
-                    return;
-            }
+            var file = new FileInfo(srcFile);
+            file.MoveTo(destFile);
         }
     }
 }
