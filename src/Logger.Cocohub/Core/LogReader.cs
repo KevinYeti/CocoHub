@@ -38,15 +38,15 @@ namespace Logger.Cocohub.Core
 
             string path = files.Min;
 
-            //try to remember the latest filename, and reset the pos when filename changed.
-            if (_file != path)
-            {
-                _pos = 0;
-                _file = path;
-            }
-
             if (num == 1)
             {
+                //try to remember the latest filename, and reset the pos when filename changed.
+                if (_file != path)
+                {
+                    _pos = 0;
+                    _file = path;
+                }
+
                 var logs = ReadLines(path, ref _pos);
                 System.IO.File.AppendAllText("log/fetch.log", "fetch1:" + path + " pos:" + _pos + Environment.NewLine);
                 System.IO.File.AppendAllText("log/fetch.log", "logs output" + Environment.NewLine);
@@ -55,34 +55,60 @@ namespace Logger.Cocohub.Core
             else    //num >= 2
             {
                 List<string> logs = new List<string>();
+                string[] lines = null;
 
                 //finish reading 1st file (from last read postion & read to EOF)
-                var lines = ReadLines(path, ref _pos);
+                if (File.Exists(path))
+                {
+                    var file = new FileInfo(path);
+                    if (_file == path && file.Length <= _pos)
+                    {
+                        //skip this file if this file has read to EOF
+                        System.IO.File.AppendAllText("log/fetch.log", "fetch2.1.0:" + path + " pos:" + _pos + Environment.NewLine);
+                        Rename(path, path.Replace(".log", ".nut"));
+                    }
+                    else
+                    {
+                        //try to remember the latest filename, and reset the pos when filename changed.
+                        if (_file != path)
+                        {
+                            _pos = 0;
+                            _file = path;
+                        }
+                        lines = ReadLines(path, ref _pos);
 
-                System.IO.File.AppendAllText("log/fetch.log", "fetch2.1:" + path + " pos:" + _pos + Environment.NewLine);
-                System.IO.File.AppendAllLines("log/fetch.log", lines);
+                        System.IO.File.AppendAllText("log/fetch.log", "fetch2.1:" + path + " pos:" + _pos + Environment.NewLine);
+                        System.IO.File.AppendAllLines("log/fetch.log", lines);
 
-                if (lines != null && lines.Length > 0)
-                    logs.AddRange(lines);
-                Rename(path, path.Replace(".log", ".nut"));
-                lines = null;
-
+                        if (lines != null && lines.Length > 0)
+                            logs.AddRange(lines);
+                        Rename(path, path.Replace(".log", ".nut"));
+                        lines = null;
+                    }
+                }
+                
                 //finish reading 2nd~(num-1)th file
-                for (int i = 1; i < num; i++)
+                for (int i = 1; i < (num - 1); i++)
                 {
                     path = files.ElementAt(i);
+                    //try to remember the latest filename, and reset the pos when filename changed.
+                    if (_file != path)
+                    {
+                        _file = path;
+                    }
                     var contents = File.ReadLines(path);
 
                     System.IO.File.AppendAllText("log/fetch.log", "fetch2.2." + i.ToString() + ":" + path + " pos:" + _pos + Environment.NewLine);
                     System.IO.File.AppendAllText("log/fetch.log", "contents output" + Environment.NewLine);
 
-                    logs.AddRange(lines);
+                    logs.AddRange(contents);
                     Rename(path, path.Replace(".log", ".nut"));
                 }
-                lines = null;
 
                 //keep reading (num)th file (from start)
                 path = files.Max;
+                //try to remember the latest filename, and reset the pos when filename changed.
+                _file = path;
                 _pos = 0;
                 lines = ReadLines(path, ref _pos);
 
