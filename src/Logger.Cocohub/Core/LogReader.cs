@@ -48,8 +48,8 @@ namespace Logger.Cocohub.Core
                 }
 
                 var logs = ReadLines(path, ref _pos);
-                System.IO.File.AppendAllText("log/fetch.log", "fetch1:" + path + " pos:" + _pos + Environment.NewLine);
-                System.IO.File.AppendAllText("log/fetch.log", "logs output" + Environment.NewLine);
+                //System.IO.File.AppendAllText("log/fetch.log", "fetch1:" + path + " pos:" + _pos + Environment.NewLine);
+                //System.IO.File.AppendAllText("log/fetch.log", "logs output" + Environment.NewLine);
                 return logs;
             }
             else    //num >= 2
@@ -64,7 +64,7 @@ namespace Logger.Cocohub.Core
                     if (_file == path && file.Length <= _pos)
                     {
                         //skip this file if this file has read to EOF
-                        System.IO.File.AppendAllText("log/fetch.log", "fetch2.1.0:" + path + " pos:" + _pos + Environment.NewLine);
+                        //System.IO.File.AppendAllText("log/fetch.log", "fetch2.1.0:" + path + " pos:" + _pos + Environment.NewLine);
                         Rename(path, path.Replace(".log", ".nut"));
                     }
                     else
@@ -77,8 +77,8 @@ namespace Logger.Cocohub.Core
                         }
                         lines = ReadLines(path, ref _pos);
 
-                        System.IO.File.AppendAllText("log/fetch.log", "fetch2.1:" + path + " pos:" + _pos + Environment.NewLine);
-                        System.IO.File.AppendAllLines("log/fetch.log", lines);
+                        //System.IO.File.AppendAllText("log/fetch.log", "fetch2.1:" + path + " pos:" + _pos + Environment.NewLine);
+                        //System.IO.File.AppendAllLines("log/fetch.log", lines);
 
                         if (lines != null && lines.Length > 0)
                             logs.AddRange(lines);
@@ -98,8 +98,8 @@ namespace Logger.Cocohub.Core
                     }
                     var contents = File.ReadLines(path);
 
-                    System.IO.File.AppendAllText("log/fetch.log", "fetch2.2." + i.ToString() + ":" + path + " pos:" + _pos + Environment.NewLine);
-                    System.IO.File.AppendAllText("log/fetch.log", "contents output" + Environment.NewLine);
+                    //System.IO.File.AppendAllText("log/fetch.log", "fetch2.2." + i.ToString() + ":" + path + " pos:" + _pos + Environment.NewLine);
+                    //System.IO.File.AppendAllText("log/fetch.log", "contents output" + Environment.NewLine);
 
                     logs.AddRange(contents);
                     Rename(path, path.Replace(".log", ".nut"));
@@ -112,8 +112,8 @@ namespace Logger.Cocohub.Core
                 _pos = 0;
                 lines = ReadLines(path, ref _pos);
 
-                System.IO.File.AppendAllText("log/fetch.log", "fetch2.3:" + path + " pos:" + _pos + Environment.NewLine);
-                System.IO.File.AppendAllText("log/fetch.log", "lines output" + Environment.NewLine);
+                //System.IO.File.AppendAllText("log/fetch.log", "fetch2.3:" + path + " pos:" + _pos + Environment.NewLine);
+                //System.IO.File.AppendAllText("log/fetch.log", "lines output" + Environment.NewLine);
 
                 if (lines != null && lines.Length > 0)
                     logs.AddRange(lines);
@@ -149,7 +149,7 @@ namespace Logger.Cocohub.Core
                     fs.Close();
                 }
 
-                System.IO.File.AppendAllText("log/read.log", lines);
+                //System.IO.File.AppendAllText("log/read.log", lines);
 
                 if (string.IsNullOrEmpty(lines))
                     return null;
