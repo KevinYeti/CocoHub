@@ -15,6 +15,17 @@ namespace Logger.Cocohub.Core
         private static string _file = string.Empty;
         private static string _directory = "log";
 
+        public static long LastPosition
+        {
+            get { return _pos; }
+            set { _pos = value; }
+        }
+        public static string LastFile
+        {
+            get { return _file; }
+            set { _file = value; }
+        }
+
         private static SortedSet<string> getLogs()
         {
             if (!Directory.Exists(_directory))

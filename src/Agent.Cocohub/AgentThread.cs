@@ -4,6 +4,7 @@ using Logger.Cocohub.Core;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -19,6 +20,23 @@ namespace Agent.Cocohub
 
         internal static void CoreFetch()
         {
+            string nutFile = "_cocohub.log.nut";
+            if (File.Exists(nutFile))
+            {
+                //try to restore the last read postion
+                string[] lines = File.ReadAllLines(nutFile);
+                if (lines.Length == 2)
+                {
+                    var lastFile = lines[0].Trim();
+                    var lastPos = lines[1].Trim();
+                    if (File.Exists(lastFile) && long.TryParse(lastPos, out long result))
+                    {
+                        LogReader.LastFile = lastFile;
+                        LogReader.LastPosition = result;
+                    }
+                }
+            }
+
             while (_running)
             {
                 try
@@ -44,6 +62,8 @@ namespace Agent.Cocohub
                     Thread.Sleep(10000);
                 }
             }
+
+            File.WriteAllLines(nutFile, new string[] { LogReader.LastFile, LogReader.LastPosition.ToString() });
         }
 
         internal static void CoreWrite()
@@ -52,7 +72,7 @@ namespace Agent.Cocohub
             {
                 try
                 {
-                    int loop = _logs.Count > 1000 ? 1000 : _logs.Count;
+                    int loop = _logs.Count > 10000 ? 10000 : _logs.Count;
                     if (loop == 0)
                     {
                         Thread.Sleep(3000);
@@ -75,7 +95,7 @@ namespace Agent.Cocohub
                     if (entities.Count > 0)
                         _write(entities);
 
-                    if (loop > 1000)
+                    if (loop >= 10000)
                         Thread.Sleep(100);
                     else
                         Thread.Sleep(3000);

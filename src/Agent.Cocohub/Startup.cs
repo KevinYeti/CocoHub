@@ -50,6 +50,7 @@ namespace Agent.Cocohub
             _threadWriteDB.Start();
 
             Console.WriteLine("Agent.Cocohub started.");
+            Console.WriteLine("Now you can stop service by enter Ctrl+C");
         }
     }
 }

@@ -16,7 +16,7 @@ namespace Tracer.Cocohub.Context
             get {
                 if (_contextAccessor == null)
                 {
-                    Console.WriteLine("Warning: CurrentHttpContext is null, this maybe cased by context accessor is null.");
+                    System.Diagnostics.Debug.WriteLine("Warning: CurrentHttpContext is null, this maybe cased by context accessor is null.");
                     return null;
                 }
                     
