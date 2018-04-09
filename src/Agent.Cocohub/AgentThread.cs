@@ -107,8 +107,6 @@ namespace Agent.Cocohub
                     Thread.Sleep(10000);
                 }
             }
-
-            Console.WriteLine("Agent.Cocohub stopped.");
         }
     }
 }

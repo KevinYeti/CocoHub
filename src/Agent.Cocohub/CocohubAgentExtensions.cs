@@ -1,5 +1,6 @@
 ﻿using Agent.Cocohub.Entity;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -8,23 +9,18 @@ namespace Agent.Cocohub
 {
     public static class CocohubAgentExtensions
     {
-        public static IApplicationBuilder UseCocohubAgent(this IApplicationBuilder builder, Action<IEnumerable<LogEntity>> write)
+        public static IApplicationLifetime UseCocohubAgent(this IApplicationLifetime lifetime, Action<IEnumerable<LogEntity>> write)
         {
             Startup.StartWatch(write);
 
-            Console.WriteLine("Press EXIT to stop.");
-            while (true)
-            {
-                var input = Console.ReadLine().Trim().ToLower();
-                if (input == "exit")
-                {
-                    Agent.Cocohub.Startup.Stop();
-                    break;
-                }
-            }
+            lifetime.ApplicationStopping.Register(onShutdown);
 
-            return builder;
+            return lifetime;
         }
 
+        private static void onShutdown()
+        {
+            Agent.Cocohub.Startup.Stop();
+        }
     }
 }

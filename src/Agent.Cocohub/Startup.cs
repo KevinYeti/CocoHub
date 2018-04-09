@@ -32,9 +32,11 @@ namespace Agent.Cocohub
 
         public static void Stop()
         {
-            Console.WriteLine("Agent.Cocohub stopping.");
+            Console.WriteLine("Agent.Cocohub stopping & flushing data.");
             AgentThread._running = false;
+            _threadFetch.Join();
             _threadWriteDB.Join();
+            Console.WriteLine("Agent.Cocohub stopped.");
         }
 
         private static void internalStart()
@@ -50,7 +52,6 @@ namespace Agent.Cocohub
             _threadWriteDB.Start();
 
             Console.WriteLine("Agent.Cocohub started.");
-            Console.WriteLine("Now you can stop service by enter Ctrl+C");
         }
     }
 }
