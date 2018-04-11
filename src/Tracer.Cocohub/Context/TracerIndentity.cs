@@ -11,8 +11,8 @@ namespace Tracer.Cocohub.Context
         {
             var tracer = new TracerIndentity();
             //generate a tracerid
-            //guid(length:32) + random(length:8)
-            tracer._tracerId = Guid.NewGuid().ToString("N") + Rnd(10000000, 99999999).ToString();
+            //guid(length:32) + random(length:4)
+            tracer._tracerId = Guid.NewGuid().ToString("N") + Rnd(1000, 9999).ToString();
 
             tracer._spanId = "0";
 

@@ -10,7 +10,7 @@ namespace MultiTree.Cocohub
 
         public Tree()
         {
-            Root = new Node(1) { Parent = null };
+            Root = new Node(0) { Parent = null };
         }
 
         public bool TryLink(string span, long time, string name, string parms)
@@ -20,21 +20,16 @@ namespace MultiTree.Cocohub
                 return false;
             else if (spans.Length == 2)
             {
-                if (spans[1] != "1")
-                    return false;
-                else
-                {
-                    //0.1
-                    Root.Name = name;
-                    Root.Time = time;
-                    Root.Params = parms;
+                //0.1 or 0.2
+                Root.Name = name;
+                Root.Time = time;
+                Root.Params = parms;
 
-                    return true;
-                }
+                return true;
             }
             else
             {
-                //0.1....
+                //0.1[.n.n.n.n]
                 Node nParent = Root;
                 for (int i = 2; i < spans.Length; i++)
                 {

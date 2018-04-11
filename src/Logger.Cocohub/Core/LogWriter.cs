@@ -9,7 +9,7 @@ namespace Logger.Cocohub.Core
     {
         private static string _directory = "log";
         private static string _path = _directory + "/cocohub.{0}.log";
-        private static int _length = 1024 * 1024 * 4;
+        private static int _length = 1000 * 1000 * 10;      //10M
 
         private static string getLogPath() 
         {
