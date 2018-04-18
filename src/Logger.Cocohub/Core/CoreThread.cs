@@ -14,10 +14,10 @@ namespace Logger.Cocohub.Core
                 var logs= LogCollector.Fetch();
                 LogWriter.Flush(logs);
 
-                if (LogCollector.Count() > 300)
+                if (LogCollector.Count() >= 1000)
                     Thread.Sleep(1000);
                 else
-                    Thread.Sleep(3000);     //DEBUG:set to 1000 when debuging so that you can get the result immediately.
+                    Thread.Sleep(30000);     //DEBUG:set to 1000 when debuging so that you can get the result immediately.
             }
         }
     }
