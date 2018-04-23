@@ -50,10 +50,10 @@ namespace Agent.Cocohub
 
                     Parallel.ForEach(logs, (log) => { _logs.Enqueue(log); });
 
-                    if (logs.Length >= 1000)
+                    if (logs.Length >= 5000)
                         Thread.Sleep(1000);
                     else
-                        Thread.Sleep(3000);
+                        Thread.Sleep(10000);
                 }
                 catch(Exception ex) 
                 {
@@ -96,7 +96,7 @@ namespace Agent.Cocohub
                         _write(entities);
 
                     if (loop >= 10000)
-                        Thread.Sleep(100);
+                        Thread.Sleep(1000);
                     else
                         Thread.Sleep(3000);
                 }

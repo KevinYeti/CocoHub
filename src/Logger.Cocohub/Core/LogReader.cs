@@ -59,15 +59,12 @@ namespace Logger.Cocohub.Core
                 }
 
                 var logs = ReadLines(path, ref _pos);
-                //System.IO.File.AppendAllText("log/fetch.log", "fetch1:" + path + " pos:" + _pos + Environment.NewLine);
-                //System.IO.File.AppendAllText("log/fetch.log", "logs output" + Environment.NewLine);
                 return logs;
             }
-            else    //num >= 2
+            else if (num > 11)
             {
                 List<string> logs = new List<string>();
                 string[] lines = null;
-
                 //finish reading 1st file (from last read postion & read to EOF)
                 if (File.Exists(path))
                 {
@@ -75,7 +72,6 @@ namespace Logger.Cocohub.Core
                     if (_file == path && file.Length <= _pos)
                     {
                         //skip this file if this file has read to EOF
-                        //System.IO.File.AppendAllText("log/fetch.log", "fetch2.1.0:" + path + " pos:" + _pos + Environment.NewLine);
                         Rename(path, path.Replace(".log", ".nut"));
                     }
                     else
@@ -88,18 +84,15 @@ namespace Logger.Cocohub.Core
                         }
                         lines = ReadLines(path, ref _pos);
 
-                        //System.IO.File.AppendAllText("log/fetch.log", "fetch2.1:" + path + " pos:" + _pos + Environment.NewLine);
-                        //System.IO.File.AppendAllLines("log/fetch.log", lines);
-
                         if (lines != null && lines.Length > 0)
                             logs.AddRange(lines);
                         Rename(path, path.Replace(".log", ".nut"));
                         lines = null;
                     }
                 }
-                
-                //finish reading 2nd~(num-1)th file
-                for (int i = 1; i < (num - 1); i++)
+
+                //finish reading 2nd~10th files
+                for (int i = 1; i < 11; i++)
                 {
                     path = files.ElementAt(i);
                     //try to remember the latest filename, and reset the pos when filename changed.
@@ -109,8 +102,56 @@ namespace Logger.Cocohub.Core
                     }
                     var contents = File.ReadLines(path);
 
-                    //System.IO.File.AppendAllText("log/fetch.log", "fetch2.2." + i.ToString() + ":" + path + " pos:" + _pos + Environment.NewLine);
-                    //System.IO.File.AppendAllText("log/fetch.log", "contents output" + Environment.NewLine);
+                    logs.AddRange(contents);
+                    Rename(path, path.Replace(".log", ".nut"));
+                }
+
+                if (lines != null && lines.Length > 0)
+                    logs.AddRange(lines);
+
+                return logs.ToArray();
+            }
+            else    //num >= 2 && num < 11
+            {
+                List<string> logs = new List<string>();
+                string[] lines = null;
+
+                //finish reading 1st file (from last read postion & read to EOF)
+                if (File.Exists(path))
+                {
+                    var file = new FileInfo(path);
+                    if (_file == path && file.Length <= _pos)
+                    {
+                        //skip this file if this file has read to EOF
+                        Rename(path, path.Replace(".log", ".nut"));
+                    }
+                    else
+                    {
+                        //try to remember the latest filename, and reset the pos when filename changed.
+                        if (_file != path)
+                        {
+                            _pos = 0;
+                            _file = path;
+                        }
+                        lines = ReadLines(path, ref _pos);
+
+                        if (lines != null && lines.Length > 0)
+                            logs.AddRange(lines);
+                        Rename(path, path.Replace(".log", ".nut"));
+                        lines = null;
+                    }
+                }
+                
+                //finish reading 2nd~(num-1)th files
+                for (int i = 1; i < (num - 1); i++)
+                {
+                    path = files.ElementAt(i);
+                    //try to remember the latest filename, and reset the pos when filename changed.
+                    if (_file != path)
+                    {
+                        _file = path;
+                    }
+                    var contents = File.ReadLines(path);
 
                     logs.AddRange(contents);
                     Rename(path, path.Replace(".log", ".nut"));
@@ -122,9 +163,6 @@ namespace Logger.Cocohub.Core
                 _file = path;
                 _pos = 0;
                 lines = ReadLines(path, ref _pos);
-
-                //System.IO.File.AppendAllText("log/fetch.log", "fetch2.3:" + path + " pos:" + _pos + Environment.NewLine);
-                //System.IO.File.AppendAllText("log/fetch.log", "lines output" + Environment.NewLine);
 
                 if (lines != null && lines.Length > 0)
                     logs.AddRange(lines);
