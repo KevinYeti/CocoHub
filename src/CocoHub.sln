@@ -21,7 +21,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cocohub.Tracer", "Cocohub.T
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MultiTree.Cocohub", "MultiTree.Cocohub\MultiTree.Cocohub.csproj", "{587201C3-2F5B-457B-BD38-45066EB4D6E9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Agent.Cocohub", "Agent.Cocohub\Agent.Cocohub.csproj", "{3B54902E-C594-42F7-A645-41823E22FDB8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Agent.Cocohub", "Agent.Cocohub\Agent.Cocohub.csproj", "{3B54902E-C594-42F7-A645-41823E22FDB8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTest", "UnitTest\UnitTest.csproj", "{31995922-E6E4-49BE-9B50-BE36913C7130}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -69,6 +71,10 @@ Global
 		{3B54902E-C594-42F7-A645-41823E22FDB8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3B54902E-C594-42F7-A645-41823E22FDB8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3B54902E-C594-42F7-A645-41823E22FDB8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{31995922-E6E4-49BE-9B50-BE36913C7130}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{31995922-E6E4-49BE-9B50-BE36913C7130}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{31995922-E6E4-49BE-9B50-BE36913C7130}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{31995922-E6E4-49BE-9B50-BE36913C7130}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -79,6 +79,7 @@ namespace Agent.Cocohub
                         continue;
                     }
                     List<LogEntity> entities = new List<LogEntity>();
+                    List<string> _error = new List<string>();
                     for (int i = 0; i < loop; i++)
                     {
                         if (_logs.TryDequeue(out var log) && !string.IsNullOrEmpty(log))
@@ -86,12 +87,20 @@ namespace Agent.Cocohub
                             if (LogResolver.TryResolve(log, out var entity) && entity != null)
                                 entities.Add(entity);
                             else
-                                Console.WriteLine("TryResolve error:" + log);
+                            {
+                                _error.Add(log);
+                            }
                         }
                         else
                             Console.WriteLine("Dequeue error.");
                     }
-
+                    if (_error.Count >= 0)
+                    {
+                        File.AppendAllLines("_resolve.err.nut", _error);
+                        _error.Clear();
+                        _error = null;
+                    }
+                    
                     if (entities.Count > 0)
                         _write(entities);
 

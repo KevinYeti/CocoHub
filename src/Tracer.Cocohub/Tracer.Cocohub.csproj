@@ -6,9 +6,9 @@
     <AssemblyName>Tracer.Cocohub</AssemblyName>
     <RootNamespace>Tracer.Cocohub</RootNamespace>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>1.2.0.55</Version>
-    <AssemblyVersion>1.2.0.55</AssemblyVersion>
-    <FileVersion>1.2.0.55</FileVersion>
+    <Version>1.2.0.56</Version>
+    <AssemblyVersion>1.2.0.56</AssemblyVersion>
+    <FileVersion>1.2.0.56</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>

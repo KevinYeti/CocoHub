@@ -57,6 +57,11 @@ namespace Tracer.Cocohub.Adapters
                 StringBuilder parameters = new StringBuilder();
                 for (int i = 0; i < paramNames.Length; i++)
                 {
+                    if (paramNames[i] == "$exception")
+                    {
+                        var value = paramValues[i].ToString();
+                        paramValues[i] = value;
+                    }
                     parameters.AppendFormat("{0}={1}", paramNames[i] ?? "$return", 
                         paramValues[i] == null ? NullString : paramValues[i].ToString().Replace("\r\n", string.Empty).Replace("\"", string.Empty));
                     if (i < paramNames.Length - 1) parameters.Append(", ");
