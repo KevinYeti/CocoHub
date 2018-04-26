@@ -41,19 +41,22 @@ namespace Agent.Cocohub
             {
                 try
                 {
+                    if (_logs.Count > 1000)
+                    {
+                        Thread.Sleep(1000);
+                        continue;
+                    }
+
                     var logs = LogReader.Fetch();
                     if (logs == null || logs.Length == 0)
                     {
-                        Thread.Sleep(3000);
+                        Thread.Sleep(1000);
                         continue;
                     }
 
                     Parallel.ForEach(logs, (log) => { _logs.Enqueue(log); });
 
-                    if (logs.Length >= 5000)
-                        Thread.Sleep(1000);
-                    else
-                        Thread.Sleep(10000);
+                    Thread.Sleep(1000);
                 }
                 catch(Exception ex) 
                 {
@@ -72,10 +75,10 @@ namespace Agent.Cocohub
             {
                 try
                 {
-                    int loop = _logs.Count > 10000 ? 10000 : _logs.Count;
+                    int loop = _logs.Count > 5000 ? 5000 : _logs.Count;
                     if (loop == 0)
                     {
-                        Thread.Sleep(3000);
+                        Thread.Sleep(1000);
                         continue;
                     }
                     List<LogEntity> entities = new List<LogEntity>();
@@ -100,11 +103,15 @@ namespace Agent.Cocohub
                         _error.Clear();
                         _error = null;
                     }
-                    
-                    if (entities.Count > 0)
-                        _write(entities);
 
-                    if (loop >= 10000)
+                    if (entities.Count > 0)
+                    {
+                        _write(entities);
+                        entities.Clear();
+                        entities = null;
+                    }
+
+                    if (loop >= 5000)
                         Thread.Sleep(1000);
                     else
                         Thread.Sleep(3000);
