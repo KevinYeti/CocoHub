@@ -70,7 +70,7 @@ namespace Tracer.Cocohub.Context
             else
             {
                 //剩下_spanId.Length == _lastSpanId.Length的情况, 理论上不会出现
-                Console.WriteLine(string.Format("SpanId[{0}] error with wrong _lastSpanId[{1}].", _spanId, _lastSpanId));
+                Console.WriteLine(string.Format("SpanId[{0}] error with wrong _lastSpanId[{1}]. TracerId:{2}", _spanId, _lastSpanId, _tracerId));
             }
         }
 
@@ -104,7 +104,7 @@ namespace Tracer.Cocohub.Context
             else
             {
                 //剩下_spanId.Length == _lastSpanId.Length的情况, 理论上不会出现
-                Console.WriteLine(string.Format("Async:SpanId[{0}] error with wrong _lastSpanId[{1}].", _spanId, _lastSpanId));
+                Console.WriteLine(string.Format("Async:SpanId[{0}] error with wrong _lastSpanId[{1}]. TracerId:{2}", _spanId, _lastSpanId, _tracerId));
             }
 
             string s = string.Empty;

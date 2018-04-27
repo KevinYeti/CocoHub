@@ -52,7 +52,7 @@ namespace Remote.Cocohub.Http
             catch (Exception ex)
             {
                 sw.Stop();
-                string logEx = string.Format(_exception, ex.Message.Replace(@"\", @"\\") + ex.StackTrace.Replace(@"\", @"\\"));
+                string logEx = string.Format(_exception, ex.Message.Replace(@"\", @"/") + ex.StackTrace.Replace(@"\", @"/"));
                 string logEnter = string.Format(_textEnterWithTracer, "Http" + method.Method, uri.ToString(), TracerContext.Tracer.TracerId, TracerContext.Tracer.SpanId);
                 string logReturn = string.Format(_textReturnWithTracer, "Http" + method.Method, logEx, sw.ElapsedMilliseconds, TracerContext.Tracer.TracerId, TracerContext.Tracer.SpanId);
 
@@ -109,7 +109,7 @@ namespace Remote.Cocohub.Http
             {
                 sw.Stop();
                 var tracers = tracer.Split(TracerIndentity.Spliter, StringSplitOptions.RemoveEmptyEntries);
-                string logEx = string.Format(_exception, ex.Message.Replace(@"\", @"\\") + ex.StackTrace.Replace(@"\", @"\\"));
+                string logEx = string.Format(_exception, ex.Message.Replace(@"\", @"/") + ex.StackTrace.Replace(@"\", @"/"));
                 string logEnter = string.Format(_textEnterWithTracer, "Http" + method.Method, uri.ToString(), tracers[0], tracers[1]);
                 string logReturn = string.Format(_textReturnWithTracer, "Http" + method.Method, logEx, sw.ElapsedMilliseconds, tracers[0], tracers[1]);
 
