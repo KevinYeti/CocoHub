@@ -73,6 +73,7 @@ namespace Agent.Cocohub
         {
             while (_running || _logs.Count > 0)
             {
+                List<string> _temp = null;
                 try
                 {
                     int loop = _logs.Count > 5000 ? 5000 : _logs.Count;
@@ -83,12 +84,16 @@ namespace Agent.Cocohub
                     }
                     List<LogEntity> entities = new List<LogEntity>();
                     List<string> _error = new List<string>();
+                    _temp = new List<string>();
                     for (int i = 0; i < loop; i++)
                     {
                         if (_logs.TryDequeue(out var log) && !string.IsNullOrEmpty(log))
                         {
                             if (LogResolver.TryResolve(log, out var entity) && entity != null)
+                            {
                                 entities.Add(entity);
+                                _temp.Add(log);
+                            }
                             else
                             {
                                 _error.Add(log);
@@ -106,10 +111,29 @@ namespace Agent.Cocohub
 
                     if (entities.Count > 0)
                     {
-                        _write(entities);
-                        entities.Clear();
-                        entities = null;
+                        try
+                        {
+                            _write(entities);
+                        }
+                        catch
+                        {
+                            for (int i = 0; i < _temp.Count; i++)
+                            {
+                                _logs.Enqueue(_temp[i]);
+                            }
+                            _temp.Clear();
+                            _temp = null;
+                            throw;
+                        }
+                        finally
+                        {
+                            entities.Clear();
+                            entities = null;
+                        } 
                     }
+
+                    _temp.Clear();
+                    _temp = null;
 
                     if (loop >= 5000)
                         Thread.Sleep(1000);
