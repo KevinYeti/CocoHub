@@ -1,9 +1,9 @@
 ﻿using Agent.Cocohub.Entity;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Agent.Cocohub
 {
@@ -11,9 +11,13 @@ namespace Agent.Cocohub
     {
         public static IApplicationLifetime UseCocohubAgent(this IApplicationLifetime lifetime, Action<IEnumerable<LogEntity>> write)
         {
-            Startup.StartWatch(write);
+            Task.Factory.StartNew(() => {
+                Thread.Sleep(10000);
 
-            lifetime.ApplicationStopping.Register(onShutdown);
+                Startup.StartWatch(write);
+
+                lifetime.ApplicationStopping.Register(onShutdown);
+            });
 
             return lifetime;
         }

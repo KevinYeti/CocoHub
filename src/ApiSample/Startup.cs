@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Tracer.Cocohub.Middleware;
 using Tracer.Cocohub.Service;
 using TracerAttributes;
+using Agent.Cocohub;
 
 namespace ApiSample
 {
@@ -26,7 +27,7 @@ namespace ApiSample
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IApplicationLifetime lifetime, IHostingEnvironment env)
         {
             if (env.IsDevelopment())
             {
@@ -35,6 +36,8 @@ namespace ApiSample
             app.UseCocohub();
 
             app.UseMvc();
+
+            lifetime.UseCocohubAgent(null);
 
         }
     }
